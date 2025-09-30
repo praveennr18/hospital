@@ -1,0 +1,152 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.login-background {
+  min-height: 100vh;
+  min-width: 100vw;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #7f5fff 0%, #5ae6ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  padding: 2.5rem 2rem 2rem 2rem;
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-logo-box {
+  margin-bottom: 1rem;
+}
+.login-logo {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #7f5fff 0%, #5ae6ff 100%);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.login-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #4b3aff;
+  margin-bottom: 0.2rem;
+}
+.login-subtitle {
+  color: #888;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.login-role-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.login-tab {
+  background: #f3f3f3;
+  border: none;
+  border-radius: 10px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  color: #4b3aff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.login-active-tab {
+  background: #7f5fff;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(127, 95, 255, 0.15);
+}
+.login-role-desc {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-bottom: 0.7rem;
+}
+.login-label {
+  font-size: 0.95rem;
+  color: #4b3aff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.login-icon {
+  margin-right: 0.4rem;
+  font-size: 1.1rem;
+}
+.login-input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  margin-top: 0.2rem;
+  background: #f9f9ff;
+  transition: border 0.2s;
+}
+.login-input:focus {
+  border: 1.5px solid #7f5fff;
+}
+.login-signin-btn {
+  background: #7f5fff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+.login-signin-btn:hover {
+  background: #5a4fff;
+}
+.login-forgot {
+  margin-top: 0.2rem;
+  font-size: 0.95rem;
+  color: #4b3aff;
+  text-align: center;
+}
+.login-forgot a {
+  color: #4b3aff;
+  text-decoration: underline;
+}
+.login-new-patient {
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: #4b3aff;
+  background: #f3f3ff;
+  border-radius: 8px;
+  padding: 0.7rem 0.8rem;
+  text-align: center;
+}
