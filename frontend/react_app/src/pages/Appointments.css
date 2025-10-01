@@ -1,0 +1,154 @@
+/* Appointments Page Layout */
+.appt-main {
+  flex: 1;
+  padding: 2.5rem 3rem 2rem 3rem;
+}
+.appt-header-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.2rem;
+}
+.appt-header-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+.appt-header-desc {
+  color: #888;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+}
+.appt-schedule-btn {
+  margin-left: auto;
+  background: #7f5fff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.appt-schedule-btn:hover {
+  background: #5a4fff;
+}
+.appt-filters-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.2rem;
+}
+.appt-search {
+  flex: 2;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #e3e7ff;
+  border-radius: 8px;
+  background: #f9f9ff;
+  font-size: 1rem;
+}
+.appt-select {
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #e3e7ff;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 1rem;
+}
+.appt-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
+  padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+  border: 1.5px solid #e3e7ff;
+}
+.appt-tab-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+.appt-tab-bar button {
+  background: #f7f8fa;
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 2.2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #222;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.appt-tab-bar button.active {
+  background: #fff;
+  color: #4b3aff;
+  border: 2px solid #bfcaff;
+}
+.appt-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1rem;
+}
+.appt-table th {
+  text-align: left;
+  color: #888;
+  font-weight: 600;
+  padding: 0.7rem 0.5rem 0.7rem 0;
+}
+.appt-table td {
+  padding: 0.7rem 0.5rem 0.7rem 0;
+  border-top: 1px solid #f0f0f0;
+}
+.appt-date {
+  font-weight: 500;
+}
+.appt-time {
+  color: #888;
+  font-size: 0.97rem;
+}
+.appt-doc-icon {
+  margin-right: 0.3rem;
+  color: #4b3aff;
+}
+.appt-type-badge {
+  display: inline-block;
+  padding: 0.3rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+.appt-type-follow {
+  background: #f3eaff;
+  color: #7f5fff;
+}
+.appt-type-consult {
+  background: #e3eaff;
+  color: #4b3aff;
+}
+.appt-type-proc {
+  background: #fff4e0;
+  color: #e6a100;
+}
+.appt-status-badge {
+  display: inline-block;
+  padding: 0.3rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  text-transform: lowercase;
+}
+.appt-status-scheduled {
+  background: #eafaf1;
+  color: #1dbf73;
+}
+.appt-status-completed {
+  background: #e3f0ff;
+  color: #2196f3;
+}
+.appt-status-cancelled {
+  background: #fff0f0;
+  color: #e53935;
+}
+.appt-status-noshow {
+  background: #fff4e0;
+  color: #e6a100;
+}
