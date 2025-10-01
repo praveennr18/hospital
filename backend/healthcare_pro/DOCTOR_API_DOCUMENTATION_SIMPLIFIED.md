@@ -347,6 +347,7 @@ Authorization: Bearer doctor_access_token
 ### **Update Weekly Schedule**
 ```
 PUT http://127.0.0.1:8000/api/doctors/my/availability/
+POST http://127.0.0.1:8000/api/doctors/my/availability/
 Authorization: Bearer doctor_access_token
 Content-Type: application/json
 ```
