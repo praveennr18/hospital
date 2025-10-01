@@ -35,7 +35,7 @@ def schedule_appointment(request):
     data = request.data
     
     # Validate required fields
-    required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason_for_visit']
+    required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason']
     for field in required_fields:
         if field not in data:
             return Response(
@@ -46,7 +46,7 @@ def schedule_appointment(request):
     try:
         # Find available doctor in the department
         department = data['department']
-        preferred_doctor_id = data.get('preferred_doctor')
+        preferred_doctor_id = data.get('doctor_id') or data.get('preferred_doctor')
         appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
         preferred_time = datetime.strptime(data['preferred_time'], '%H:%M').time()
         
@@ -61,7 +61,7 @@ def schedule_appointment(request):
                 )
         else:
             # Find any available doctor in the department
-            doctors = Doctor.objects.filter(department=department, is_active=True)
+            doctors = Doctor.objects.filter(department=department, is_available=True)
             if not doctors.exists():
                 return Response(
                     {'error': 'No doctors available in the specified department'}, 
@@ -84,13 +84,15 @@ def schedule_appointment(request):
             )
         
         # Create the appointment
+        reason_text = data.get('reason') or data.get('reason_for_visit', '')
         appointment_data = {
             'patient': patient.id,
             'doctor': doctor.id,
             'appointment_date': appointment_date,
             'appointment_time': preferred_time,
             'appointment_type': data['appointment_type'],
-            'reason': data['reason_for_visit'],
+            'chief_complaint': reason_text,
+            'reason': reason_text,
             'status': 'scheduled'
         }
         

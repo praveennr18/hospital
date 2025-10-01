@@ -463,7 +463,7 @@ def doctor_availability(request):
     })
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'POST'])
 @permission_classes([IsAuthenticated])
 def update_availability(request):
     """
@@ -584,3 +584,87 @@ def remove_time_slot(request, slot_id):
     return Response({
         'message': 'Time slot removed successfully'
     })
+
+
+@api_view(['GET', 'PUT', 'POST'])
+@permission_classes([IsAuthenticated])
+def combined_availability(request):
+    """
+    Combined availability view: GET to fetch schedule, PUT/POST to update schedule
+    """
+    if request.user.role != 'doctor':
+        return Response(
+            {"error": "Access denied. Doctor role required."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        doctor = Doctor.objects.get(user=request.user)
+    except Doctor.DoesNotExist:
+        return Response(
+            {"error": "Doctor profile not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    if request.method == 'GET':
+        # Get week parameter (defaults to current week)
+        week_param = request.GET.get('week')
+        if week_param:
+            try:
+                week_start = datetime.strptime(week_param, '%Y-%m-%d').date()
+            except ValueError:
+                week_start = timezone.now().date() - timedelta(days=timezone.now().date().weekday())
+        else:
+            week_start = timezone.now().date() - timedelta(days=timezone.now().date().weekday())
+        
+        # Get availability records for the doctor
+        availabilities = Availability.objects.filter(doctor=doctor)
+        
+        # Build weekly schedule
+        days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+        weekly_schedule = {}
+        
+        for day in days:
+            day_availabilities = availabilities.filter(day_of_week=day.capitalize())
+            
+            time_slots = []
+            for availability in day_availabilities:
+                time_slots.append({
+                    'id': str(availability.id),
+                    'start_time': availability.start_time.strftime('%H:%M'),
+                    'end_time': availability.end_time.strftime('%H:%M'),
+                    'available': availability.is_available
+                })
+            
+            weekly_schedule[day] = {
+                'active': len(time_slots) > 0,
+                'time_slots': time_slots
+            }
+        
+        return Response({
+            'weekly_schedule': weekly_schedule
+        })
+    
+    elif request.method in ['PUT', 'POST']:
+        # Update weekly schedule
+        weekly_schedule = request.data.get('weekly_schedule', {})
+        
+        # Clear existing availability
+        Availability.objects.filter(doctor=doctor).delete()
+        
+        # Create new availability records
+        for day, schedule_data in weekly_schedule.items():
+            if schedule_data.get('active', False):
+                time_slots = schedule_data.get('time_slots', [])
+                for slot in time_slots:
+                    Availability.objects.create(
+                        doctor=doctor,
+                        day_of_week=day.capitalize(),
+                        start_time=slot['start_time'],
+                        end_time=slot['end_time'],
+                        is_available=slot.get('available', True)
+                    )
+        
+        return Response({
+            'message': 'Schedule updated successfully'
+        })

@@ -92,10 +92,7 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-    "condition": "Diabetes Type 2",
-    "diagnosed_date": "2025-08-15",
-    "status": "Ongoing",
-    "notes": "Family history of diabetes, diagnosed during routine checkup"
+    "condition": "Diabetes Type 2"
 }
 ```
 
@@ -157,10 +154,7 @@ Content-Type: application/json
 **Request Body:**
 ```json
 {
-    "allergen": "Shellfish",
-    "severity": "Mild",
-    "reaction": "Stomach upset",
-    "notes": "Mild digestive issues when consuming shellfish"
+    "allergen": "Shellfish"
 }
 ```
 
@@ -231,12 +225,7 @@ Content-Type: application/json
 ```json
 {
     "medication_name": "Vitamin D3",
-    "dosage": "1000 IU",
-    "frequency": "Once daily",
-    "prescribed_date": "2025-09-30",
-    "condition": "Vitamin D deficiency",
-    "prescribing_doctor": "Dr. John Smith",
-    "notes": "Take with food for better absorption"
+    "dosage": "1000 IU"
 }
 ```
 
@@ -311,7 +300,7 @@ Content-Type: application/json
     "department": "cardiology",
     "doctor_id": "doctor_uuid",
     "appointment_date": "2025-11-19",
-    "preferred_time": "10:30:00",
+    "preferred_time": "10:30",
     "appointment_type": "follow-up",
     "reason": "Regular checkup for blood pressure monitoring"
 }
