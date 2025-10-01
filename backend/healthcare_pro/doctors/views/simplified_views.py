@@ -5,6 +5,7 @@ from rest_framework import status
 from django.utils import timezone
 from datetime import datetime, timedelta, date
 from django.db.models import Q, Count
+from decouple import config
 
 from doctors.models import Doctor, Availability
 from patients.models import PatientProfile, MedicalHistory, Allergy, Medication
@@ -127,7 +128,8 @@ def doctor_appointments(request):
         appointments = appointments.filter(appointment_date=today)
     elif period_filter == 'week':
         week_start = today - timedelta(days=today.weekday())
-        week_end = week_start + timedelta(days=6)
+        default_schedule_days = config('DEFAULT_SCHEDULE_DAYS', default=7, cast=int)
+        week_end = week_start + timedelta(days=default_schedule_days - 1)
         appointments = appointments.filter(
             appointment_date__range=[week_start, week_end]
         )

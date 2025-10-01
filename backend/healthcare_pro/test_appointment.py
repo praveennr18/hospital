@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 import requests
 import json
+import os
+from decouple import config
 
 # Test appointment scheduling with doctor authentication
-BASE_URL = "http://127.0.0.1:8000"
+BASE_URL = config('API_BASE_URL', default='http://127.0.0.1:8000')
+
 
 # Login as doctor to get token
 login_data = {

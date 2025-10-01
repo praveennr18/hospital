@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from django.utils import timezone
 from datetime import datetime, timedelta
+from decouple import config
 
 from ..models import AppointmentSlot, Appointment
 from ..serializers import (
@@ -134,7 +135,8 @@ def available_slots(request):
         if end_date:
             end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
         else:
-            end_date = start_date + timedelta(days=7)  # Default to 1 week
+            default_schedule_days = config('DEFAULT_SCHEDULE_DAYS', default=7, cast=int)
+            end_date = start_date + timedelta(days=default_schedule_days)  # Default configurable period
     except ValueError:
         return Response(
             {"error": "Invalid date format. Use YYYY-MM-DD."},

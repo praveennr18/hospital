@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.db.models import Q, Count
 from datetime import datetime, timedelta, date
 from rest_framework.decorators import api_view, permission_classes
+from decouple import config
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -124,7 +125,8 @@ def doctor_appointments(request):
         appointments = appointments.filter(appointment_date=today)
     elif date_filter == 'week':
         week_start = today - timedelta(days=today.weekday())
-        week_end = week_start + timedelta(days=6)
+        default_schedule_days = config('DEFAULT_SCHEDULE_DAYS', default=7, cast=int)
+        week_end = week_start + timedelta(days=default_schedule_days - 1)
         appointments = appointments.filter(
             appointment_date__range=[week_start, week_end]
         )

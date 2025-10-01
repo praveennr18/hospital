@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 from django.db.models import Q
 from datetime import datetime, time, timedelta
 from django.utils import timezone
+from decouple import config
 
 from ..models import Appointment
 from ..serializers import AppointmentCreateSerializer, AppointmentSerializer
@@ -188,10 +189,11 @@ def get_available_slots(request):
             status__in=['scheduled', 'confirmed']
         ).values_list('appointment_time', flat=True)
         
-        # Generate time slots (9 AM to 5 PM, 30-minute intervals)
+        # Generate time slots (9 AM to 5 PM, configurable duration)
         start_time = time(9, 0)  # 9:00 AM
         end_time = time(17, 0)   # 5:00 PM
-        slot_duration = timedelta(minutes=30)
+        slot_duration_minutes = config('APPOINTMENT_SLOT_DURATION_MINUTES', default=30, cast=int)
+        slot_duration = timedelta(minutes=slot_duration_minutes)
         
         slots = []
         current_time = datetime.combine(appointment_date, start_time)
