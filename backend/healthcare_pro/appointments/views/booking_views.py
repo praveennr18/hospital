@@ -214,17 +214,19 @@ def get_departments(request):
     """
     from django.db.models import Count
     
-    departments = Doctor.objects.filter(is_active=True).values('department').annotate(
+    # Get unique departments from available doctors
+    departments = Doctor.objects.filter(is_available=True).values('specialization').annotate(
         doctors_count=Count('id')
-    ).order_by('department')
+    ).order_by('specialization')
     
-    department_list = [
-        {
-            'name': dept['department'],
-            'doctors_count': dept['doctors_count']
-        }
-        for dept in departments
-    ]
+    department_list = []
+    for dept in departments:
+        specialization = dept['specialization']
+        department_list.append({
+            'id': specialization,
+            'name': f"{dict(Doctor.SPECIALIZATION_CHOICES).get(specialization, specialization)} Department",
+            'specialization': specialization
+        })
     
     return Response({
         'departments': department_list
@@ -246,23 +248,23 @@ def get_doctors_by_department(request):
         )
     
     doctors = Doctor.objects.filter(
-        department=department, 
-        is_active=True
+        specialization=department, 
+        is_available=True
     ).select_related('user')
     
     doctor_list = [
         {
-            'id': doctor.id,
+            'id': str(doctor.id),
             'name': f"Dr. {doctor.user.first_name} {doctor.user.last_name}",
+            'specialization': dict(Doctor.SPECIALIZATION_CHOICES).get(doctor.specialization, doctor.specialization),
+            'department': f"{dict(Doctor.SPECIALIZATION_CHOICES).get(doctor.specialization, doctor.specialization)} Department",
             'years_of_experience': doctor.years_of_experience or 0,
-            'consultation_fee': str(doctor.consultation_fee) if doctor.consultation_fee else "0.00",
-            'rating': 4.5  # Placeholder rating
+            'is_available': doctor.is_available
         }
         for doctor in doctors
     ]
     
     return Response({
-        'department': department,
         'doctors': doctor_list
     })
 

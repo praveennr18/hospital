@@ -133,3 +133,28 @@ class MedicationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
         fields = ['medication_name', 'dosage']
+
+
+# Simplified serializers for GET responses (patient API)
+class MedicalHistorySimpleSerializer(serializers.ModelSerializer):
+    """Simplified serializer for MedicalHistory GET responses."""
+    
+    class Meta:
+        model = MedicalHistory
+        fields = ['id', 'condition']
+
+
+class AllergySimpleSerializer(serializers.ModelSerializer):
+    """Simplified serializer for Allergy GET responses."""
+    
+    class Meta:
+        model = Allergy
+        fields = ['id', 'allergen']
+
+
+class MedicationSimpleSerializer(serializers.ModelSerializer):
+    """Simplified serializer for Medication GET responses."""
+    
+    class Meta:
+        model = Medication
+        fields = ['id', 'medication_name', 'dosage']
