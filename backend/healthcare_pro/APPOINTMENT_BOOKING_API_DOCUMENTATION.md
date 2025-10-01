@@ -69,7 +69,7 @@ POST /api/appointments/schedule/
 
 **Error Responses:**
 - `400`: Invalid data or time slot unavailable
-- `403`: Only patients can schedule appointments
+- `403`: Only authenticated patients, doctors, and admins can schedule appointments
 - `404`: Doctor not found or patient profile not found
 
 ---
@@ -293,7 +293,7 @@ PATCH /api/appointments/{appointment_id}/reschedule/
 **403 Forbidden:**
 ```json
 {
-    "error": "Only patients can schedule appointments"
+    "error": "Only patients, doctors, and admins can schedule appointments"
 }
 ```
 
