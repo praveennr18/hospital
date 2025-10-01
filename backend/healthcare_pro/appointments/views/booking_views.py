@@ -17,22 +17,46 @@ from patients.models import PatientProfile
 def schedule_appointment(request):
     """
     Schedule a new appointment with enhanced booking functionality
+    Allows patients, doctors, and admins to schedule appointments
     """
-    if request.user.role != 'patient':
+    # Allow patients, doctors, and admins to schedule appointments
+    if request.user.role not in ['patient', 'doctor', 'admin']:
         return Response(
-            {'error': 'Only patients can schedule appointments'}, 
+            {'error': 'Only patients, doctors, and admins can schedule appointments'}, 
             status=status.HTTP_403_FORBIDDEN
         )
     
-    try:
-        patient = PatientProfile.objects.get(user=request.user)
-    except PatientProfile.DoesNotExist:
-        return Response(
-            {'error': 'Patient profile not found'}, 
-            status=status.HTTP_404_NOT_FOUND
-        )
-    
     data = request.data
+    
+    # If user is a patient, use their own profile
+    if request.user.role == 'patient':
+        try:
+            patient = PatientProfile.objects.get(user=request.user)
+            # For patients scheduling their own appointments, use their ID
+            if 'patient_id' not in data:
+                data = data.copy()
+                data['patient_id'] = patient.id
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient profile not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    else:
+        # For doctors and admins, patient_id must be provided
+        if 'patient_id' not in data:
+            return Response(
+                {'error': 'Patient ID is required when scheduling for another patient'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Verify the patient exists
+        try:
+            patient = PatientProfile.objects.get(id=data['patient_id'])
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
     
     # Validate required fields
     required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason']
