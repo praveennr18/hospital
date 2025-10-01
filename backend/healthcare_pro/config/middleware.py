@@ -26,7 +26,6 @@ class APILoggingMiddleware(MiddlewareMixin):
         
         # Log only API requests (those starting with /api/)
         if request.path.startswith('/api/'):
-            # Simple log format with user role
             log_message = f"{request.method} {request.path} - Status: {response.status_code} - User: {user_info} - Duration: {duration*1000:.0f}ms"
             
             # Log based on status code
