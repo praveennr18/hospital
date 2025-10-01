@@ -2,6 +2,7 @@ import secrets
 import string
 from django.core.mail import send_mail
 from django.conf import settings
+from decouple import config
 
 def generate_random_password(length=12):
     """Generate a secure random password"""
@@ -23,7 +24,7 @@ def send_credentials_email(email, password, role):
     Password: {password}
     Role: {role.capitalize()}
     
-    Please login at: http://localhost:3000/login
+    Please login at: {config('FRONTEND_URL', default='http://localhost:3000')}/login
     
     For security reasons, we recommend changing your password after first login.
     

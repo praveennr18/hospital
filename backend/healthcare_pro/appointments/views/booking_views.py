@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 from django.db.models import Q
 from datetime import datetime, time, timedelta
 from django.utils import timezone
+from decouple import config
 
 from ..models import Appointment
 from ..serializers import AppointmentCreateSerializer, AppointmentSerializer
@@ -17,22 +18,46 @@ from patients.models import PatientProfile
 def schedule_appointment(request):
     """
     Schedule a new appointment with enhanced booking functionality
+    Allows patients, doctors, and admins to schedule appointments
     """
-    if request.user.role != 'patient':
+    # Allow patients, doctors, and admins to schedule appointments
+    if request.user.role not in ['patient', 'doctor', 'admin']:
         return Response(
-            {'error': 'Only patients can schedule appointments'}, 
+            {'error': 'Only patients, doctors, and admins can schedule appointments'}, 
             status=status.HTTP_403_FORBIDDEN
         )
     
-    try:
-        patient = PatientProfile.objects.get(user=request.user)
-    except PatientProfile.DoesNotExist:
-        return Response(
-            {'error': 'Patient profile not found'}, 
-            status=status.HTTP_404_NOT_FOUND
-        )
-    
     data = request.data
+    
+    # If user is a patient, use their own profile
+    if request.user.role == 'patient':
+        try:
+            patient = PatientProfile.objects.get(user=request.user)
+            # For patients scheduling their own appointments, use their ID
+            if 'patient_id' not in data:
+                data = data.copy()
+                data['patient_id'] = patient.id
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient profile not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    else:
+        # For doctors and admins, patient_id must be provided
+        if 'patient_id' not in data:
+            return Response(
+                {'error': 'Patient ID is required when scheduling for another patient'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Verify the patient exists
+        try:
+            patient = PatientProfile.objects.get(id=data['patient_id'])
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
     
     # Validate required fields
     required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason']
@@ -164,10 +189,11 @@ def get_available_slots(request):
             status__in=['scheduled', 'confirmed']
         ).values_list('appointment_time', flat=True)
         
-        # Generate time slots (9 AM to 5 PM, 30-minute intervals)
+        # Generate time slots (9 AM to 5 PM, configurable duration)
         start_time = time(9, 0)  # 9:00 AM
         end_time = time(17, 0)   # 5:00 PM
-        slot_duration = timedelta(minutes=30)
+        slot_duration_minutes = config('APPOINTMENT_SLOT_DURATION_MINUTES', default=30, cast=int)
+        slot_duration = timedelta(minutes=slot_duration_minutes)
         
         slots = []
         current_time = datetime.combine(appointment_date, start_time)

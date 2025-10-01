@@ -2,6 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import datetime, timedelta
+from decouple import config
 import uuid
 
 
@@ -113,8 +114,9 @@ class Appointment(models.Model):
         if self.status in ['completed', 'cancelled', 'no_show']:
             return False
         
+        cancellation_deadline_hours = config('CANCELLATION_DEADLINE_HOURS', default=24, cast=int)
         time_until_appointment = self.appointment_datetime - timezone.now()
-        return time_until_appointment > timedelta(hours=24)
+        return time_until_appointment > timedelta(hours=cancellation_deadline_hours)
 
 
 class AppointmentSlot(models.Model):
