@@ -469,6 +469,8 @@ Authorization: Bearer doctor_access_token
 
 ✅ **Simplified Dashboard**: Today's schedule and patient count  
 ✅ **Appointment Management**: View, filter, and update appointment status  
+✅ **Appointment Scheduling**: Schedule new appointments for patients  
+✅ **Appointment Cancellation**: Cancel appointments with valid reasons  
 ✅ **Patient Directory**: Access to patient list and detailed information  
 ✅ **Availability Control**: Weekly schedule management with time slots  
 ✅ **Clean UI-focused APIs**: Only endpoints that match the actual UI requirements  

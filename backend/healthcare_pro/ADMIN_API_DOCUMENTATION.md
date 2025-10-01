@@ -108,7 +108,7 @@ Authorization: Bearer admin_access_token
 
 ---
 
-## 🩺 **3. Doctor Management**
+## 🩺 **6. Enhanced Doctor Management**
 
 ### **Get All Doctors List**
 ```
@@ -134,6 +134,44 @@ Authorization: Bearer admin_access_token
     }
   ],
   "total": 12
+}
+```
+
+### **Update Doctor Profile**
+```
+PUT http://127.0.0.1:8000/api/accounts/admin/doctors/{doctor_id}/
+Authorization: Bearer admin_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "first_name": "John",
+    "last_name": "Smith",
+    "email": "john.smith@hospital.com",
+    "phone": "(555) 123-4567",
+    "specialization": "cardiology",
+    "department": "Cardiology Department",
+    "years_of_experience": 12,
+    "license_number": "MD123456",
+    "qualification": "MD, MBBS, Cardiology Specialist",
+    "consultation_fee": 175.00,
+    "is_active": true
+}
+```
+
+### **Delete Doctor**
+```
+DELETE http://127.0.0.1:8000/api/accounts/admin/doctors/{doctor_id}/
+Authorization: Bearer admin_access_token
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Doctor deleted successfully"
 }
 ```
 
@@ -201,7 +239,7 @@ Content-Type: application/json
 
 ---
 
-## 🏥 **4. Patient Management**
+## 🏥 **7. Enhanced Patient Management**
 
 ### **Get All Patients List**
 ```
@@ -228,6 +266,50 @@ Authorization: Bearer admin_access_token
     }
   ],
   "total": 156
+}
+```
+
+### **Update Patient Profile**
+```
+PUT http://127.0.0.1:8000/api/accounts/admin/patients/{patient_id}/
+Authorization: Bearer admin_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "first_name": "Sarah",
+    "last_name": "Johnson",
+    "email": "sarah.johnson@email.com",
+    "phone_number": "(555) 123-4567",
+    "date_of_birth": "1984-03-20",
+    "gender": "F",
+    "blood_group": "A+",
+    "address": "456 Oak Avenue",
+    "city": "Los Angeles",
+    "state": "CA",
+    "zip_code": "90210",
+    "emergency_contact_name": "Michael Johnson",
+    "emergency_contact_phone": "(555) 765-4321",
+    "relationship": "Husband",
+    "insurance_provider": "Blue Cross Blue Shield",
+    "policy_number": "BC123456789",
+    "is_active": true
+}
+```
+
+### **Delete Patient**
+```
+DELETE http://127.0.0.1:8000/api/accounts/admin/patients/{patient_id}/
+Authorization: Bearer admin_access_token
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Patient deleted successfully"
 }
 ```
 
@@ -289,6 +371,74 @@ Content-Type: application/json
 
 ## 📅 **5. Appointment Management**
 
+### **Schedule New Appointment for Patient**
+```
+POST http://127.0.0.1:8000/api/appointments/schedule/
+Authorization: Bearer admin_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "patient_id": 1,
+    "department": "Cardiology",
+    "doctor_id": "6f118b76-0dfb-44d9-be40-5be389f337d5",
+    "appointment_date": "2024-03-25",
+    "appointment_time": "09:00",
+    "appointment_type": "consultation",
+    "reason": "Regular checkup for heart condition",
+    "notes": "Patient requested follow-up appointment"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Appointment scheduled successfully",
+    "appointment": {
+        "id": "appointment_uuid",
+        "patient_name": "Sarah Johnson",
+        "doctor_name": "Dr. John Smith",
+        "date": "Mar 25, 2024",
+        "time": "09:00",
+        "type": "consultation",
+        "status": "scheduled"
+    }
+}
+```
+
+### **Cancel Appointment**
+```
+PATCH http://127.0.0.1:8000/api/appointments/{appointment_id}/cancel/
+Authorization: Bearer admin_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "cancellation_reason": "Administrative cancellation - patient request",
+    "cancelled_by": "admin"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Appointment cancelled successfully",
+    "appointment": {
+        "id": "appointment_uuid",
+        "status": "cancelled",
+        "cancellation_reason": "Administrative cancellation - patient request",
+        "cancelled_by": "admin",
+        "cancelled_at": "2024-03-20T10:30:00Z"
+    }
+}
+```
+
 ### **Today's Appointments Overview**
 Included in the dashboard stats endpoint.
 
@@ -302,35 +452,65 @@ Authorization: Bearer admin_access_token
 
 ---
 
-## 🔄 **6. Admin Workflow**
+## 🔄 **8. Admin Workflow**
 
-### **Complete Registration Process:**
+### **Complete Management Process:**
 
-1. **Register Patient:**
+1. **Schedule Appointments:**
+   ```
+   POST /api/appointments/schedule/
+   ```
+
+2. **Cancel Appointments:**
+   ```
+   PATCH /api/appointments/{appointment_id}/cancel/
+   ```
+
+3. **Register Patient:**
    ```
    POST /api/accounts/admin/register/patient/
    ```
 
-2. **Register Doctor:**
+4. **Update Patient:**
+   ```
+   PUT /api/accounts/admin/patients/{patient_id}/
+   ```
+
+5. **Delete Patient:**
+   ```
+   DELETE /api/accounts/admin/patients/{patient_id}/
+   ```
+
+6. **Register Doctor:**
    ```
    POST /api/accounts/admin/register/doctor/
    ```
 
-3. **View Dashboard:**
+7. **Update Doctor:**
+   ```
+   PUT /api/accounts/admin/doctors/{doctor_id}/
+   ```
+
+8. **Delete Doctor:**
+   ```
+   DELETE /api/accounts/admin/doctors/{doctor_id}/
+   ```
+
+9. **View Dashboard:**
    ```
    GET /api/accounts/admin/dashboard/stats/
    ```
 
-4. **Manage Users:**
-   ```
-   GET /api/accounts/admin/users/
-   GET /api/accounts/admin/doctors/list/
-   GET /api/accounts/admin/patients/list/
-   ```
+10. **Manage Users:**
+    ```
+    GET /api/accounts/admin/users/
+    GET /api/accounts/admin/doctors/list/
+    GET /api/accounts/admin/patients/list/
+    ```
 
 ---
 
-## 📧 **7. Credential Management**
+## 📧 **9. Credential Management**
 
 When admin registers a doctor or patient:
 
@@ -347,7 +527,7 @@ POST http://127.0.0.1:8000/api/accounts/admin/users/{user_id}/reset-password/
 
 ---
 
-## ✅ **8. Field Validation**
+## ✅ **10. Field Validation**
 
 ### **Required Fields for Doctor Registration:**
 - `first_name`, `last_name`, `email`
@@ -357,20 +537,29 @@ POST http://127.0.0.1:8000/api/accounts/admin/users/{user_id}/reset-password/
 - `first_name`, `last_name`, `email`
 - Other fields are optional but recommended
 
+### **Required Fields for Appointment Scheduling:**
+- `patient_id`, `doctor_id`, `appointment_date`, `appointment_time`
+- `department`, `appointment_type`, `reason`
+
 ### **Optional Fields:**
 - All address, emergency contact, and insurance fields
 - Schedule settings for doctors
+- Notes for appointments
 
 ---
 
-## 🎯 **9. Key Features**
+## 🎯 **11. Key Features**
 
 ✅ **Complete Registration Flow**: Single endpoint creates user + profile  
+✅ **Appointment Scheduling**: Both admin and doctors can schedule appointments  
+✅ **Appointment Cancellation**: Cancel with valid reasons and tracking  
+✅ **Full CRUD Operations**: Create, Read, Update, Delete for doctors and patients  
 ✅ **Automatic Credential Generation**: Secure random passwords  
 ✅ **Email Integration**: Credentials sent to users  
 ✅ **Dashboard Statistics**: Real-time overview  
-✅ **Comprehensive Management**: Full CRUD operations  
-✅ **Role-Based Security**: Admin-only access  
+✅ **Comprehensive Management**: Full administrative control  
+✅ **Role-Based Security**: Admin-only access for sensitive operations  
 ✅ **Field Flexibility**: Optional fields for gradual data entry  
+✅ **Audit Trail**: Track who cancelled appointments and when  
 
-This admin API provides complete backend support for the beautiful admin interface shown in the screenshots! 🚀
+This admin API provides complete backend support for the beautiful admin interface with full appointment and user management capabilities! 🚀
