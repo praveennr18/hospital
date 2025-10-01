@@ -28,7 +28,7 @@ export default function PatientLogin({ onLogin, setAdminLoggedIn }) {
       }
       return;
     }
-    if (onLogin) onLogin();
+    if (onLogin) onLogin(roles[selectedRole].label);
   };
   return (
     <div className="login-background">

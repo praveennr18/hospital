@@ -75,6 +75,7 @@ export default function Appointments() {
     }
     return true;
   });
+  return (
     <div className="appt-main">
       <div className="appt-header-row">
         <div>
