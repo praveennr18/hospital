@@ -108,6 +108,44 @@ Authorization: Bearer doctor_access_token
 }
 ```
 
+### **Schedule New Appointment for Patient**
+```
+POST http://127.0.0.1:8000/api/appointments/schedule/
+Authorization: Bearer doctor_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "patient_id": 1,
+    "department": "Cardiology",
+    "doctor_id": "6f118b76-0dfb-44d9-be40-5be389f337d5",
+    "appointment_date": "2024-03-25",
+    "appointment_time": "09:00",
+    "appointment_type": "consultation",
+    "reason": "Regular checkup for heart condition",
+    "notes": "Patient requested follow-up appointment"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Appointment scheduled successfully",
+    "appointment": {
+        "id": "appointment_uuid",
+        "patient_name": "Sarah Johnson",
+        "doctor_name": "Dr. John Smith",
+        "date": "Mar 25, 2024",
+        "time": "09:00",
+        "type": "consultation",
+        "status": "scheduled"
+    }
+}
+```
+
 ### **Update Appointment Status**
 ```
 PATCH http://127.0.0.1:8000/api/doctors/my/appointments/{appointment_id}/
@@ -128,6 +166,35 @@ Content-Type: application/json
 - `completed` → Cannot be changed
 - `cancelled` → Cannot be changed
 - `no-show` → Cannot be changed
+
+### **Cancel Appointment**
+```
+PATCH http://127.0.0.1:8000/api/doctors/my/appointments/{appointment_id}/cancel/
+Authorization: Bearer doctor_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "cancellation_reason": "Doctor emergency - rescheduling required",
+    "cancelled_by": "doctor"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Appointment cancelled successfully",
+    "appointment": {
+        "id": "appointment_uuid",
+        "status": "cancelled",
+        "cancellation_reason": "Doctor emergency - rescheduling required",
+        "cancelled_by": "doctor",
+        "cancelled_at": "2024-03-20T10:30:00Z"
+    }
+}
 
 ---
 
