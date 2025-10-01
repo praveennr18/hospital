@@ -9,9 +9,9 @@ from patients.models import PatientProfile, MedicalHistory, Allergy, Medication
 from appointments.models import Appointment
 from doctors.models import Doctor
 from patients.serializers import (
-    MedicalHistorySerializer, MedicalHistoryCreateSerializer,
-    AllergySerializer, AllergyCreateSerializer,
-    MedicationSerializer, MedicationCreateSerializer
+    MedicalHistorySerializer, MedicalHistoryCreateSerializer, MedicalHistorySimpleSerializer,
+    AllergySerializer, AllergyCreateSerializer, AllergySimpleSerializer,
+    MedicationSerializer, MedicationCreateSerializer, MedicationSimpleSerializer
 )
 
 
@@ -85,7 +85,7 @@ def medical_history_management(request):
     
     if request.method == 'GET':
         medical_history = MedicalHistory.objects.filter(patient=patient).order_by('-created_at')
-        serializer = MedicalHistorySerializer(medical_history, many=True)
+        serializer = MedicalHistorySimpleSerializer(medical_history, many=True)
         
         return Response({
             'medical_history': serializer.data,
@@ -165,7 +165,7 @@ def allergies_management(request):
     
     if request.method == 'GET':
         allergies = Allergy.objects.filter(patient=patient).order_by('-created_at')
-        serializer = AllergySerializer(allergies, many=True)
+        serializer = AllergySimpleSerializer(allergies, many=True)
         
         return Response({
             'allergies': serializer.data,
@@ -245,7 +245,7 @@ def medications_management(request):
     
     if request.method == 'GET':
         medications = Medication.objects.filter(patient=patient, is_active=True).order_by('-created_at')
-        serializer = MedicationSerializer(medications, many=True)
+        serializer = MedicationSimpleSerializer(medications, many=True)
         
         return Response({
             'medications': serializer.data,

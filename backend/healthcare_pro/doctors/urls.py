@@ -11,7 +11,7 @@ urlpatterns = [
     
     # Patient Management (matches My Patients UI)
     path('my/patients/', simplified_views.doctor_patients, name='doctor-patients'),
-    path('my/patients/<uuid:patient_id>/', simplified_views.patient_details, name='patient-details'),
+    path('my/patients/<int:patient_id>/', simplified_views.patient_details, name='patient-details'),
     
     # Availability Management (matches Availability Management UI)
     path('my/availability/', simplified_views.combined_availability, name='doctor-availability'),

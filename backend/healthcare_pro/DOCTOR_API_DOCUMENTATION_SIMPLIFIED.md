@@ -149,7 +149,7 @@ Authorization: Bearer doctor_access_token
 {
     "patients": [
         {
-            "id": "patient_uuid",
+            "id": "1",
             "name": "Sarah Johnson",
             "age": "40 years",
             "gender": "Female",
@@ -161,7 +161,7 @@ Authorization: Bearer doctor_access_token
             "last_visit": "3/15/2024"
         },
         {
-            "id": "patient_uuid_2",
+            "id": "2",
             "name": "Michael Chen",
             "age": "53 years", 
             "gender": "Male",
@@ -185,11 +185,13 @@ GET http://127.0.0.1:8000/api/doctors/my/patients/{patient_id}/
 Authorization: Bearer doctor_access_token
 ```
 
+**Note:** `patient_id` should be an integer (e.g., `1`, `2`, `3`), not a UUID.
+
 **Response:**
 ```json
 {
     "patient": {
-        "id": "patient_uuid",
+        "id": "1",
         "name": "Sarah Johnson",
         "patient_id": "1",
         "age": "40 years",
@@ -216,47 +218,33 @@ Authorization: Bearer doctor_access_token
     "medical_history": [
         {
             "id": "history_uuid",
-            "condition": "Hypertension",
-            "diagnosed_date": "Jan 15, 2023",
-            "status": "Ongoing",
-            "notes": "Well controlled with medication"
+            "condition": "Hypertension"
         },
         {
             "id": "history_uuid_2",
-            "condition": "Diabetes Type 2", 
-            "diagnosed_date": "Aug 15, 2020",
-            "status": "Ongoing",
-            "notes": "Managed with diet and medication"
+            "condition": "Diabetes Type 2"
         }
     ],
     "allergies": [
         {
             "id": "allergy_uuid",
-            "allergen": "Penicillin",
-            "severity": "Moderate",
-            "reaction": "Skin rash"
+            "allergen": "Penicillin"
         },
         {
             "id": "allergy_uuid_2",
-            "allergen": "Peanuts",
-            "severity": "Severe", 
-            "reaction": "Anaphylaxis"
+            "allergen": "Peanuts"
         }
     ],
     "current_medications": [
         {
             "id": "medication_uuid",
             "medication_name": "Metformin 500mg",
-            "dosage": "500mg",
-            "frequency": "Twice daily",
-            "prescribed_date": "Aug 16, 2023"
+            "dosage": "500mg"
         },
         {
             "id": "medication_uuid_2",
-            "medication_name": "Lisinopril 10mg", 
-            "dosage": "10mg",
-            "frequency": "Once daily",
-            "prescribed_date": "Sep 26, 2023"
+            "medication_name": "Lisinopril 10mg",
+            "dosage": "10mg"
         }
     ]
 }

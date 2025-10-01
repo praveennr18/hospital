@@ -62,20 +62,10 @@ Authorization: Bearer patient_access_token
 {
     "medical_history": [
         {
-            "id": "history_uuid",
-            "condition": "Hypertension",
-            "diagnosed_date": "2025-01-15",
-            "status": "Ongoing",
-            "notes": "Patient-reported hypertension, well controlled with medication",
-            "created_at": "2025-01-15T10:00:00Z"
+            "condition": "Hypertension"
         },
         {
-            "id": "history_uuid_2",
-            "condition": "Diabetes Type 2",
-            "diagnosed_date": "2020-08-15",
-            "status": "Ongoing", 
-            "notes": "Family history of diabetes, diagnosed during routine checkup",
-            "created_at": "2020-08-16T10:00:00Z"
+            "condition": "Diabetes Type 2"
         }
     ],
     "total_count": 2
@@ -124,20 +114,10 @@ Authorization: Bearer patient_access_token
 {
     "allergies": [
         {
-            "id": "allergy_uuid",
-            "allergen": "Penicillin",
-            "severity": "Moderate",
-            "reaction": "Skin rash",
-            "notes": "Developed rash after taking penicillin",
-            "created_at": "2020-01-15T10:00:00Z"
+            "allergen": "Penicillin"
         },
         {
-            "id": "allergy_uuid_2",
-            "allergen": "Peanuts",
-            "severity": "Severe",
-            "reaction": "Anaphylaxis",
-            "notes": "Severe allergic reaction, requires EpiPen",
-            "created_at": "2018-05-20T14:30:00Z"
+            "allergen": "Peanuts"
         }
     ],
     "total_count": 2
@@ -186,28 +166,12 @@ Authorization: Bearer patient_access_token
 {
     "medications": [
         {
-            "id": "medication_uuid",
             "medication_name": "Metformin 500mg",
-            "dosage": "500mg",
-            "frequency": "Twice daily",
-            "prescribed_date": "2025-08-16",
-            "condition": "Diabetes Type 2",
-            "prescribing_doctor": "Dr. Emily Davis",
-            "notes": "Take with meals to reduce stomach upset",
-            "is_active": true,
-            "created_at": "2025-08-16T10:00:00Z"
+            "dosage": "500mg"
         },
         {
-            "id": "medication_uuid_2",
             "medication_name": "Lisinopril 10mg",
-            "dosage": "10mg", 
-            "frequency": "Once daily",
-            "prescribed_date": "2025-09-26",
-            "condition": "Hypertension",
-            "prescribing_doctor": "Dr. John Smith",
-            "notes": "Take in the morning, monitor blood pressure",
-            "is_active": true,
-            "created_at": "2025-09-26T11:00:00Z"
+            "dosage": "10mg"
         }
     ],
     "total_count": 2
