@@ -11,11 +11,10 @@ urlpatterns = [
     
     # Patient Management (matches My Patients UI)
     path('my/patients/', simplified_views.doctor_patients, name='doctor-patients'),
-    path('my/patients/<uuid:patient_id>/', simplified_views.patient_details, name='patient-details'),
+    path('my/patients/<int:patient_id>/', simplified_views.patient_details, name='patient-details'),
     
     # Availability Management (matches Availability Management UI)
-    path('my/availability/', simplified_views.doctor_availability, name='doctor-availability'),
-    path('my/availability/update/', simplified_views.update_availability, name='update-availability'),
+    path('my/availability/', simplified_views.combined_availability, name='doctor-availability'),
     path('my/availability/add-slot/', simplified_views.add_time_slot, name='add-time-slot'),
     path('my/availability/slots/<uuid:slot_id>/', simplified_views.remove_time_slot, name='remove-time-slot'),
 ]

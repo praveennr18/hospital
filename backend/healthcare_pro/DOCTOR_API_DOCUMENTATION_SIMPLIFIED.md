@@ -108,6 +108,44 @@ Authorization: Bearer doctor_access_token
 }
 ```
 
+### **Schedule New Appointment for Patient**
+```
+POST http://127.0.0.1:8000/api/appointments/schedule/
+Authorization: Bearer doctor_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "patient_id": 1,
+    "department": "Cardiology",
+    "doctor_id": "6f118b76-0dfb-44d9-be40-5be389f337d5",
+    "appointment_date": "2024-03-25",
+    "appointment_time": "09:00",
+    "appointment_type": "consultation",
+    "reason": "Regular checkup for heart condition",
+    "notes": "Patient requested follow-up appointment"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Appointment scheduled successfully",
+    "appointment": {
+        "id": "appointment_uuid",
+        "patient_name": "Sarah Johnson",
+        "doctor_name": "Dr. John Smith",
+        "date": "Mar 25, 2024",
+        "time": "09:00",
+        "type": "consultation",
+        "status": "scheduled"
+    }
+}
+```
+
 ### **Update Appointment Status**
 ```
 PATCH http://127.0.0.1:8000/api/doctors/my/appointments/{appointment_id}/
@@ -129,6 +167,35 @@ Content-Type: application/json
 - `cancelled` → Cannot be changed
 - `no-show` → Cannot be changed
 
+### **Cancel Appointment**
+```
+PATCH http://127.0.0.1:8000/api/doctors/my/appointments/{appointment_id}/cancel/
+Authorization: Bearer doctor_access_token
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "cancellation_reason": "Doctor emergency - rescheduling required",
+    "cancelled_by": "doctor"
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Appointment cancelled successfully",
+    "appointment": {
+        "id": "appointment_uuid",
+        "status": "cancelled",
+        "cancellation_reason": "Doctor emergency - rescheduling required",
+        "cancelled_by": "doctor",
+        "cancelled_at": "2024-03-20T10:30:00Z"
+    }
+}
+
 ---
 
 ## 👥 **3. Patient Management**
@@ -149,7 +216,7 @@ Authorization: Bearer doctor_access_token
 {
     "patients": [
         {
-            "id": "patient_uuid",
+            "id": "1",
             "name": "Sarah Johnson",
             "age": "40 years",
             "gender": "Female",
@@ -161,7 +228,7 @@ Authorization: Bearer doctor_access_token
             "last_visit": "3/15/2024"
         },
         {
-            "id": "patient_uuid_2",
+            "id": "2",
             "name": "Michael Chen",
             "age": "53 years", 
             "gender": "Male",
@@ -185,11 +252,13 @@ GET http://127.0.0.1:8000/api/doctors/my/patients/{patient_id}/
 Authorization: Bearer doctor_access_token
 ```
 
+**Note:** `patient_id` should be an integer (e.g., `1`, `2`, `3`), not a UUID.
+
 **Response:**
 ```json
 {
     "patient": {
-        "id": "patient_uuid",
+        "id": "1",
         "name": "Sarah Johnson",
         "patient_id": "1",
         "age": "40 years",
@@ -216,47 +285,33 @@ Authorization: Bearer doctor_access_token
     "medical_history": [
         {
             "id": "history_uuid",
-            "condition": "Hypertension",
-            "diagnosed_date": "Jan 15, 2023",
-            "status": "Ongoing",
-            "notes": "Well controlled with medication"
+            "condition": "Hypertension"
         },
         {
             "id": "history_uuid_2",
-            "condition": "Diabetes Type 2", 
-            "diagnosed_date": "Aug 15, 2020",
-            "status": "Ongoing",
-            "notes": "Managed with diet and medication"
+            "condition": "Diabetes Type 2"
         }
     ],
     "allergies": [
         {
             "id": "allergy_uuid",
-            "allergen": "Penicillin",
-            "severity": "Moderate",
-            "reaction": "Skin rash"
+            "allergen": "Penicillin"
         },
         {
             "id": "allergy_uuid_2",
-            "allergen": "Peanuts",
-            "severity": "Severe", 
-            "reaction": "Anaphylaxis"
+            "allergen": "Peanuts"
         }
     ],
     "current_medications": [
         {
             "id": "medication_uuid",
             "medication_name": "Metformin 500mg",
-            "dosage": "500mg",
-            "frequency": "Twice daily",
-            "prescribed_date": "Aug 16, 2023"
+            "dosage": "500mg"
         },
         {
             "id": "medication_uuid_2",
-            "medication_name": "Lisinopril 10mg", 
-            "dosage": "10mg",
-            "frequency": "Once daily",
-            "prescribed_date": "Sep 26, 2023"
+            "medication_name": "Lisinopril 10mg",
+            "dosage": "10mg"
         }
     ]
 }
@@ -347,6 +402,7 @@ Authorization: Bearer doctor_access_token
 ### **Update Weekly Schedule**
 ```
 PUT http://127.0.0.1:8000/api/doctors/my/availability/
+POST http://127.0.0.1:8000/api/doctors/my/availability/
 Authorization: Bearer doctor_access_token
 Content-Type: application/json
 ```
@@ -413,6 +469,8 @@ Authorization: Bearer doctor_access_token
 
 ✅ **Simplified Dashboard**: Today's schedule and patient count  
 ✅ **Appointment Management**: View, filter, and update appointment status  
+✅ **Appointment Scheduling**: Schedule new appointments for patients  
+✅ **Appointment Cancellation**: Cancel appointments with valid reasons  
 ✅ **Patient Directory**: Access to patient list and detailed information  
 ✅ **Availability Control**: Weekly schedule management with time slots  
 ✅ **Clean UI-focused APIs**: Only endpoints that match the actual UI requirements  

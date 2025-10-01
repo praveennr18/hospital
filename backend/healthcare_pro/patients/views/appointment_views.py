@@ -2,6 +2,7 @@ from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from appointments.models import Appointment
 from appointments.serializers import AppointmentSerializer, AppointmentListSerializer
@@ -49,7 +50,7 @@ def my_appointments(request):
     except ValueError:
         page = 1
     
-    page_size = 10
+    page_size = getattr(settings, 'REST_FRAMEWORK', {}).get('PAGE_SIZE', 10)
     start = (page - 1) * page_size
     end = start + page_size
     

@@ -45,43 +45,18 @@ class AppointmentCreateSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = [
             'patient', 'doctor', 'appointment_date', 'appointment_time',
-            'duration', 'appointment_type', 'chief_complaint', 'notes'
+            'duration', 'appointment_type', 'chief_complaint', 'reason', 'status'
         ]
     
     def validate(self, data):
-        """Validate appointment data."""
+        """Basic validation for appointment data."""
         appointment_date = data.get('appointment_date')
         appointment_time = data.get('appointment_time')
-        doctor = data.get('doctor')
         
-        # Check if appointment is in the future
-        appointment_datetime = datetime.combine(appointment_date, appointment_time)
-        if appointment_datetime <= timezone.now():
-            raise serializers.ValidationError("Appointment must be scheduled for a future date and time.")
-        
-        # Check if doctor is available
-        if doctor:
-            day_of_week = appointment_date.weekday()
-            from doctors.models import Availability
-            doctor_schedule = Availability.objects.filter(
-                doctor=doctor,
-                day=day_of_week,
-                start_time__lte=appointment_time,
-                end_time__gte=appointment_time,
-                is_available=True
-            )
-            if not doctor_schedule.exists():
-                raise serializers.ValidationError("Doctor is not available at this time.")
-            
-            # Check for conflicting appointments
-            conflicting_appointments = Appointment.objects.filter(
-                doctor=doctor,
-                appointment_date=appointment_date,
-                appointment_time=appointment_time,
-                status__in=['scheduled', 'confirmed', 'in_progress']
-            )
-            if conflicting_appointments.exists():
-                raise serializers.ValidationError("Doctor already has an appointment at this time.")
+        # Basic date validation - ensure appointment is not in the past
+        today = timezone.now().date()
+        if appointment_date < today:
+            raise serializers.ValidationError("Appointment cannot be scheduled for a past date.")
         
         return data
 

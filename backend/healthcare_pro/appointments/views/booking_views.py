@@ -5,6 +5,7 @@ from rest_framework.exceptions import ValidationError
 from django.db.models import Q
 from datetime import datetime, time, timedelta
 from django.utils import timezone
+from decouple import config
 
 from ..models import Appointment
 from ..serializers import AppointmentCreateSerializer, AppointmentSerializer
@@ -17,25 +18,49 @@ from patients.models import PatientProfile
 def schedule_appointment(request):
     """
     Schedule a new appointment with enhanced booking functionality
+    Allows patients, doctors, and admins to schedule appointments
     """
-    if request.user.role != 'patient':
+    # Allow patients, doctors, and admins to schedule appointments
+    if request.user.role not in ['patient', 'doctor', 'admin']:
         return Response(
-            {'error': 'Only patients can schedule appointments'}, 
+            {'error': 'Only patients, doctors, and admins can schedule appointments'}, 
             status=status.HTTP_403_FORBIDDEN
-        )
-    
-    try:
-        patient = PatientProfile.objects.get(user=request.user)
-    except PatientProfile.DoesNotExist:
-        return Response(
-            {'error': 'Patient profile not found'}, 
-            status=status.HTTP_404_NOT_FOUND
         )
     
     data = request.data
     
+    # If user is a patient, use their own profile
+    if request.user.role == 'patient':
+        try:
+            patient = PatientProfile.objects.get(user=request.user)
+            # For patients scheduling their own appointments, use their ID
+            if 'patient_id' not in data:
+                data = data.copy()
+                data['patient_id'] = patient.id
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient profile not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    else:
+        # For doctors and admins, patient_id must be provided
+        if 'patient_id' not in data:
+            return Response(
+                {'error': 'Patient ID is required when scheduling for another patient'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Verify the patient exists
+        try:
+            patient = PatientProfile.objects.get(id=data['patient_id'])
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    
     # Validate required fields
-    required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason_for_visit']
+    required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason']
     for field in required_fields:
         if field not in data:
             return Response(
@@ -46,7 +71,7 @@ def schedule_appointment(request):
     try:
         # Find available doctor in the department
         department = data['department']
-        preferred_doctor_id = data.get('preferred_doctor')
+        preferred_doctor_id = data.get('doctor_id') or data.get('preferred_doctor')
         appointment_date = datetime.strptime(data['appointment_date'], '%Y-%m-%d').date()
         preferred_time = datetime.strptime(data['preferred_time'], '%H:%M').time()
         
@@ -61,7 +86,7 @@ def schedule_appointment(request):
                 )
         else:
             # Find any available doctor in the department
-            doctors = Doctor.objects.filter(department=department, is_active=True)
+            doctors = Doctor.objects.filter(department=department, is_available=True)
             if not doctors.exists():
                 return Response(
                     {'error': 'No doctors available in the specified department'}, 
@@ -84,13 +109,15 @@ def schedule_appointment(request):
             )
         
         # Create the appointment
+        reason_text = data.get('reason') or data.get('reason_for_visit', '')
         appointment_data = {
             'patient': patient.id,
             'doctor': doctor.id,
             'appointment_date': appointment_date,
             'appointment_time': preferred_time,
             'appointment_type': data['appointment_type'],
-            'reason': data['reason_for_visit'],
+            'chief_complaint': reason_text,
+            'reason': reason_text,
             'status': 'scheduled'
         }
         
@@ -162,10 +189,11 @@ def get_available_slots(request):
             status__in=['scheduled', 'confirmed']
         ).values_list('appointment_time', flat=True)
         
-        # Generate time slots (9 AM to 5 PM, 30-minute intervals)
+        # Generate time slots (9 AM to 5 PM, configurable duration)
         start_time = time(9, 0)  # 9:00 AM
         end_time = time(17, 0)   # 5:00 PM
-        slot_duration = timedelta(minutes=30)
+        slot_duration_minutes = config('APPOINTMENT_SLOT_DURATION_MINUTES', default=30, cast=int)
+        slot_duration = timedelta(minutes=slot_duration_minutes)
         
         slots = []
         current_time = datetime.combine(appointment_date, start_time)
@@ -212,17 +240,19 @@ def get_departments(request):
     """
     from django.db.models import Count
     
-    departments = Doctor.objects.filter(is_active=True).values('department').annotate(
+    # Get unique departments from available doctors
+    departments = Doctor.objects.filter(is_available=True).values('specialization').annotate(
         doctors_count=Count('id')
-    ).order_by('department')
+    ).order_by('specialization')
     
-    department_list = [
-        {
-            'name': dept['department'],
-            'doctors_count': dept['doctors_count']
-        }
-        for dept in departments
-    ]
+    department_list = []
+    for dept in departments:
+        specialization = dept['specialization']
+        department_list.append({
+            'id': specialization,
+            'name': f"{dict(Doctor.SPECIALIZATION_CHOICES).get(specialization, specialization)} Department",
+            'specialization': specialization
+        })
     
     return Response({
         'departments': department_list
@@ -244,23 +274,23 @@ def get_doctors_by_department(request):
         )
     
     doctors = Doctor.objects.filter(
-        department=department, 
-        is_active=True
+        specialization=department, 
+        is_available=True
     ).select_related('user')
     
     doctor_list = [
         {
-            'id': doctor.id,
+            'id': str(doctor.id),
             'name': f"Dr. {doctor.user.first_name} {doctor.user.last_name}",
+            'specialization': dict(Doctor.SPECIALIZATION_CHOICES).get(doctor.specialization, doctor.specialization),
+            'department': f"{dict(Doctor.SPECIALIZATION_CHOICES).get(doctor.specialization, doctor.specialization)} Department",
             'years_of_experience': doctor.years_of_experience or 0,
-            'consultation_fee': str(doctor.consultation_fee) if doctor.consultation_fee else "0.00",
-            'rating': 4.5  # Placeholder rating
+            'is_available': doctor.is_available
         }
         for doctor in doctors
     ]
     
     return Response({
-        'department': department,
         'doctors': doctor_list
     })
 

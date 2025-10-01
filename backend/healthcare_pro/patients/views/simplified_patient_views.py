@@ -8,7 +8,11 @@ from datetime import date
 from patients.models import PatientProfile, MedicalHistory, Allergy, Medication
 from appointments.models import Appointment
 from doctors.models import Doctor
-from patients.serializers import MedicalHistorySerializer, AllergySerializer, MedicationSerializer
+from patients.serializers import (
+    MedicalHistorySerializer, MedicalHistoryCreateSerializer, MedicalHistorySimpleSerializer,
+    AllergySerializer, AllergyCreateSerializer, AllergySimpleSerializer,
+    MedicationSerializer, MedicationCreateSerializer, MedicationSimpleSerializer
+)
 
 
 @api_view(['GET'])
@@ -81,7 +85,7 @@ def medical_history_management(request):
     
     if request.method == 'GET':
         medical_history = MedicalHistory.objects.filter(patient=patient).order_by('-created_at')
-        serializer = MedicalHistorySerializer(medical_history, many=True)
+        serializer = MedicalHistorySimpleSerializer(medical_history, many=True)
         
         return Response({
             'medical_history': serializer.data,
@@ -89,10 +93,18 @@ def medical_history_management(request):
         })
     
     elif request.method == 'POST':
-        serializer = MedicalHistorySerializer(data=request.data)
+        serializer = MedicalHistoryCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(patient=patient)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Create medical history with minimal required fields
+            medical_history = MedicalHistory.objects.create(
+                patient=patient,
+                condition=serializer.validated_data['condition'],
+                date=date.today(),  # Default to today
+                description=serializer.validated_data['condition']  # Use condition as description
+            )
+            # Return the full serialized data
+            response_serializer = MedicalHistorySerializer(medical_history)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -153,7 +165,7 @@ def allergies_management(request):
     
     if request.method == 'GET':
         allergies = Allergy.objects.filter(patient=patient).order_by('-created_at')
-        serializer = AllergySerializer(allergies, many=True)
+        serializer = AllergySimpleSerializer(allergies, many=True)
         
         return Response({
             'allergies': serializer.data,
@@ -161,10 +173,18 @@ def allergies_management(request):
         })
     
     elif request.method == 'POST':
-        serializer = AllergySerializer(data=request.data)
+        serializer = AllergyCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(patient=patient)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Create allergy with minimal required fields
+            allergy = Allergy.objects.create(
+                patient=patient,
+                allergen=serializer.validated_data['allergen'],
+                severity='Mild',  # Default value
+                reaction='Not specified'  # Default value
+            )
+            # Return the full serialized data
+            response_serializer = AllergySerializer(allergy)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -225,7 +245,7 @@ def medications_management(request):
     
     if request.method == 'GET':
         medications = Medication.objects.filter(patient=patient, is_active=True).order_by('-created_at')
-        serializer = MedicationSerializer(medications, many=True)
+        serializer = MedicationSimpleSerializer(medications, many=True)
         
         return Response({
             'medications': serializer.data,
@@ -233,10 +253,22 @@ def medications_management(request):
         })
     
     elif request.method == 'POST':
-        serializer = MedicationSerializer(data=request.data)
+        serializer = MedicationCreateSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(patient=patient, is_active=True)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # Create medication with minimal required fields
+            medication = Medication.objects.create(
+                patient=patient,
+                medication_name=serializer.validated_data['medication_name'],
+                dosage=serializer.validated_data['dosage'],
+                frequency='As prescribed',  # Default value
+                prescribed_date=date.today(),  # Default to today
+                condition='General',  # Default value
+                prescribing_doctor='Self-reported',  # Default value
+                is_active=True
+            )
+            # Return the full serialized data
+            response_serializer = MedicationSerializer(medication)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

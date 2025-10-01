@@ -91,11 +91,11 @@ class MedicalHistorySerializer(serializers.ModelSerializer):
 
 
 class MedicalHistoryCreateSerializer(serializers.ModelSerializer):
-    """Serializer for creating MedicalHistory records."""
+    """Simplified serializer for creating MedicalHistory records."""
     
     class Meta:
         model = MedicalHistory
-        fields = ['date', 'condition', 'description', 'treatment', 'doctor']
+        fields = ['condition']
 
 
 class AllergySerializer(serializers.ModelSerializer):
@@ -103,8 +103,16 @@ class AllergySerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Allergy
-        fields = ['id', 'allergen', 'severity', 'reaction', 'notes', 'created_at', 'updated_at']
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        fields = ['id', 'allergen', 'severity', 'reaction', 'notes', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class AllergyCreateSerializer(serializers.ModelSerializer):
+    """Simplified serializer for creating Allergy records."""
+    
+    class Meta:
+        model = Allergy
+        fields = ['allergen']
 
 
 class MedicationSerializer(serializers.ModelSerializer):
@@ -113,7 +121,40 @@ class MedicationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medication
         fields = [
-            'id', 'medication_name', 'dosage', 'frequency', 'prescribed_date', 
-            'condition', 'prescribing_doctor', 'notes', 'is_active', 'created_at', 'updated_at'
+            'id', 'medication_name', 'dosage', 'frequency', 'prescribed_date',
+            'condition', 'prescribing_doctor', 'notes', 'is_active', 'created_at'
         ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class MedicationCreateSerializer(serializers.ModelSerializer):
+    """Simplified serializer for creating Medication records."""
+    
+    class Meta:
+        model = Medication
+        fields = ['medication_name', 'dosage']
+
+
+# Simplified serializers for GET responses (patient API)
+class MedicalHistorySimpleSerializer(serializers.ModelSerializer):
+    """Simplified serializer for MedicalHistory GET responses."""
+    
+    class Meta:
+        model = MedicalHistory
+        fields = ['id', 'condition']
+
+
+class AllergySimpleSerializer(serializers.ModelSerializer):
+    """Simplified serializer for Allergy GET responses."""
+    
+    class Meta:
+        model = Allergy
+        fields = ['id', 'allergen']
+
+
+class MedicationSimpleSerializer(serializers.ModelSerializer):
+    """Simplified serializer for Medication GET responses."""
+    
+    class Meta:
+        model = Medication
+        fields = ['id', 'medication_name', 'dosage']
