@@ -8,6 +8,7 @@ This directory contains all test files for the Healthcare Pro application.
 - **`test_appointment.py`** - Tests appointment scheduling and management
 - **`test_appointment_booking.py`** - Tests appointment booking functionality
 - **`test_permissions.py`** - Tests role-based permissions
+- **`test_role_logging.py`** - Tests API logging with different user roles
 
 ### 📊 System Tests  
 - **`test_simple_logging.py`** - Tests the simplified logging system
