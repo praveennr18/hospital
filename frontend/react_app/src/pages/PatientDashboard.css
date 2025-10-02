@@ -231,69 +231,6 @@
   margin-bottom: 0.5rem;
   border: 1.5px solid #e3e7ff;
 }
-.pdash-health-summary {
-  border-left: none;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
-  padding: 1.5rem 1.5rem 1.2rem 1.5rem;
-  margin-bottom: 0.5rem;
-  border: 1.5px solid #e3e7ff;
-}
-.pdash-summary-row {
-  display: flex;
-  gap: 2rem;
-  margin-top: 1.2rem;
-  justify-content: flex-start;
-}
-.pdash-summary-box {
-  flex: 1;
-  border-radius: 12px;
-  padding: 1.5rem 0.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  font-weight: 600;
-  min-width: 200px;
-  box-shadow: none;
-}
-.pdash-summary-allergy {
-  background: #fff4f4;
-  color: #e53935;
-  border: none;
-}
-.pdash-summary-med {
-  background: #f4fff4;
-  color: #1dbf73;
-  border: none;
-}
-.pdash-summary-history {
-  background: #f4f8ff;
-  color: #2563eb;
-  border: none;
-}
-.pdash-summary-num {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 0.2rem;
-}
-.pdash-summary-allergy .pdash-summary-num {
-  color: #e53935;
-}
-.pdash-summary-med .pdash-summary-num {
-  color: #1dbf73;
-}
-.pdash-summary-history .pdash-summary-num {
-  color: #2563eb;
-}
-.pdash-summary-label {
-  font-size: 1rem;
-  font-weight: 400;
-  margin-top: 0.2rem;
-  text-align: center;
-  }
 .pdash-personal-info {
   border-left: 4px solid #4b3aff;
   position: relative;

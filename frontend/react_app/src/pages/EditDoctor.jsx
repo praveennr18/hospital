@@ -9,12 +9,7 @@ export default function EditDoctor() {
   const navigate = useNavigate();
   const { doctors, editDoctor } = useAdminData();
   const doctor = doctors.find(d => String(d.id) === String(id));
-  // Split name for form
-  const [form, setForm] = React.useState(doctor ? {
-    ...doctor,
-    firstName: doctor.name ? doctor.name.split(' ')[0] : '',
-    lastName: doctor.name ? doctor.name.split(' ').slice(1).join(' ') : '',
-  } : {});
+  const [form, setForm] = React.useState(doctor || {});
 
   if (!doctor) return <AdminLayout><div>Doctor not found</div></AdminLayout>;
 
@@ -24,12 +19,7 @@ export default function EditDoctor() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // Merge first/last name
-    const updated = {
-      ...form,
-      name: (form.firstName || '') + ' ' + (form.lastName || ''),
-    };
-    editDoctor(updated);
+    editDoctor(form);
     navigate('/admin/doctors');
   }
 
@@ -91,7 +81,7 @@ export default function EditDoctor() {
           <div className="form-row">
             <div className="form-group" style={{flex: 2}}>
               <label>Qualifications</label>
-              <input name="qualification" value={form.qualification || ''} onChange={handleChange} />
+              <input name="qualifications" value={form.qualifications || ''} onChange={handleChange} />
             </div>
             <div className="form-group" style={{flex: 'none'}}>
               <button type="button" className="add-btn">+</button>
