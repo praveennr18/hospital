@@ -118,8 +118,46 @@ export default function DoctorAppointments() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
 
-  // Filtered appointments
+  // Helper functions for date filtering
+  function isToday(dateStr) {
+    const today = new Date();
+    const d = new Date(dateStr);
+    return d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() === today.getDate();
+  }
+  function isThisWeek(dateStr) {
+    const today = new Date();
+    const d = new Date(dateStr);
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    return d >= startOfWeek && d <= endOfWeek;
+  }
+  function isUpcoming(dateStr) {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const d = new Date(dateStr);
+    return d > today;
+  }
+
+  // Filtered appointments with tab logic
   const filteredAppointments = appointments.filter(appt => {
+    // Convert date string to ISO if needed
+    let apptDate = appt.date;
+    // Try to parse as ISO, fallback to parsing as 'MMM DD, YYYY'
+    let d = new Date(apptDate);
+    if (isNaN(d)) {
+      // Try parsing as 'Mar 25, 2024'
+      const parts = apptDate.match(/([A-Za-z]+) (\d{1,2}), (\d{4})/);
+      if (parts) {
+        d = new Date(`${parts[3]}-${('0'+(['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].indexOf(parts[1])+1)).slice(-2)}-${('0'+parts[2]).slice(-2)}`);
+      }
+    }
+    // Tab filtering
+    if (tab === 'today' && !isToday(d)) return false;
+    if (tab === 'week' && !isThisWeek(d)) return false;
+    if (tab === 'upcoming' && !isUpcoming(d)) return false;
+    // Search, status, type filters
     const matchesSearch = appt.patient.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === 'all' ? true : appt.status === statusFilter;
     const matchesType = typeFilter === 'all' ? true : appt.type === typeFilter;

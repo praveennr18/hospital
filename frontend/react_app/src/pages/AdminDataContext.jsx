@@ -19,9 +19,23 @@ const initialPatients = [
   { id: 5, name: 'Jessica Davis', age: 37, gender: 'Female', blood: 'O+', email: 'jessica.davis@email.com', phone: '(555) 567-8901', lastVisit: '3/5/2024' },
 ];
 
+const initialAppointments = [
+  { id: 1, patient: 'Sarah Johnson', patientInitials: 'SJ', doctor: 'Dr. Smith', date: '3/25/2024', time: '09:00', type: 'Follow-Up', status: 'Scheduled' },
+  { id: 2, patient: 'Michael Chen', patientInitials: 'MC', doctor: 'Dr. Johnson', date: '3/25/2024', time: '10:30', type: 'Consultation', status: 'Scheduled' },
+  { id: 3, patient: 'Emily Rodriguez', patientInitials: 'ER', doctor: 'Dr. Brown', date: '3/26/2024', time: '14:00', type: 'Follow-Up', status: 'Scheduled' },
+  { id: 4, patient: 'Robert Williams', patientInitials: 'RW', doctor: 'Dr. Wilson', date: '3/24/2024', time: '11:00', type: 'Procedure', status: 'Completed' },
+  { id: 5, patient: 'Jessica Davis', patientInitials: 'JD', doctor: 'Dr. Lee', date: '3/27/2024', time: '15:30', type: 'Consultation', status: 'Scheduled' },
+  { id: 6, patient: 'Sarah Johnson', patientInitials: 'SJ', doctor: 'Dr. Smith', date: '3/22/2024', time: '10:00', type: 'Consultation', status: 'Cancelled' },
+  { id: 7, patient: 'Michael Chen', patientInitials: 'MC', doctor: 'Dr. Johnson', date: '3/23/2024', time: '09:30', type: 'Follow-Up', status: 'No-Show' },
+  { id: 8, patient: 'Emily Rodriguez', patientInitials: 'ER', doctor: 'Dr. Brown', date: '3/21/2024', time: '16:00', type: 'Consultation', status: 'Cancelled' },
+  { id: 9, patient: 'Robert Williams', patientInitials: 'RW', doctor: 'Dr. Wilson', date: '4/5/2024', time: '11:30', type: 'Follow-Up', status: 'Scheduled' },
+  { id: 10, patient: 'Jessica Davis', patientInitials: 'JD', doctor: 'Dr. Lee', date: '4/10/2024', time: '13:00', type: 'Consultation', status: 'Scheduled' },
+];
+
 export function AdminDataProvider({ children }) {
   const [doctors, setDoctors] = useState(initialDoctors);
   const [patients, setPatients] = useState(initialPatients);
+  const [appointments, setAppointments] = useState(initialAppointments);
 
   const addDoctor = doctor => setDoctors(docs => [...docs, doctor]);
   const editDoctor = updated => setDoctors(docs => docs.map(d => d.id === updated.id ? updated : d));
@@ -31,10 +45,15 @@ export function AdminDataProvider({ children }) {
   const editPatient = updated => setPatients(pats => pats.map(p => p.id === updated.id ? updated : p));
   const deletePatient = id => setPatients(pats => pats.filter(p => p.id !== id));
 
+  const addAppointment = appt => setAppointments(appts => [...appts, appt]);
+  const editAppointment = updated => setAppointments(appts => appts.map(a => a.id === updated.id ? updated : a));
+  const deleteAppointment = id => setAppointments(appts => appts.filter(a => a.id !== id));
+
   return (
     <AdminDataContext.Provider value={{
       doctors, addDoctor, editDoctor, deleteDoctor,
-      patients, addPatient, editPatient, deletePatient
+      patients, addPatient, editPatient, deletePatient,
+      appointments, addAppointment, editAppointment, deleteAppointment
     }}>
       {children}
     </AdminDataContext.Provider>

@@ -68,7 +68,7 @@ function AppRoutes({ loggedIn, setLoggedIn, userRole, setUserRole, adminLoggedIn
     if (userRole === 'Doctor') {
         return (
             <Routes>
-                <Route path="/doctor" element={<DoctorDashboard onLogout={() => { setLoggedIn(false); setUserRole(null); navigate('/login'); }} />} />
+                <Route path="/doctor/*" element={<DoctorDashboard onLogout={() => { setLoggedIn(false); setUserRole(null); navigate('/login'); }} />} />
                 <Route path="*" element={<Navigate to="/doctor" />} />
             </Routes>
         );
