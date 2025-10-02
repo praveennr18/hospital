@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../assets/healthcare_logo.png';
 import { useNavigate } from 'react-router-dom';
 import './PatientDashboard.css';
 
@@ -139,7 +140,7 @@ export default function PatientDashboard({ onLogout }) {
     <div className="pdash-root">
       <aside className="pdash-sidebar">
         <div className="pdash-logo">
-          <span className="pdash-logo-icon">&#8963;</span>
+          <img src={logo} alt="HealthCare Pro Logo" style={{height:32, marginRight:8, verticalAlign:'middle'}} />
           <span className="pdash-logo-text">HealthCare Pro</span>
         </div>
         <nav className="pdash-nav">

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import logo from '../assets/healthcare_logo.png';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import './DoctorDashboard.css';
 import DoctorAppointments from './DoctorAppointments';
@@ -18,7 +19,7 @@ export default function DoctorDashboard({ onLogout }) {
     <div className="doc-layout">
       <aside className="doc-sidebar">
         <div className="doc-logo-row">
-          <span className="doc-logo-icon">&#8963;</span>
+          <img src={logo} alt="HealthCare Pro Logo" style={{height:32, marginRight:8, verticalAlign:'middle'}} />
           <span className="doc-logo-text">HealthCare Pro</span>
         </div>
         <nav className="doc-nav">

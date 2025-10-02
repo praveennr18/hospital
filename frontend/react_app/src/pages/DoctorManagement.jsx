@@ -3,6 +3,7 @@ import './DoctorManagement.css';
 import AdminLayout from './AdminLayout';
 import { useAdminData } from './AdminDataContext';
 import { useNavigate } from 'react-router-dom';
+import DeleteDoctorModal from './DeleteDoctorModal';
 
 const specialtyColors = {
   'Cardiology': 'badge-red',
@@ -16,14 +17,41 @@ const specialtyColors = {
 export default function DoctorManagement({ setAdminLoggedIn }) {
   const { doctors, deleteDoctor } = useAdminData();
   const [search, setSearch] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const navigate = useNavigate();
   const filtered = doctors.filter(d =>
     d.name.toLowerCase().includes(search.toLowerCase()) ||
     d.specialty.toLowerCase().includes(search.toLowerCase()) ||
     d.email.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleDeleteClick = (doctor) => {
+    setSelectedDoctor(doctor);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedDoctor) {
+      deleteDoctor(selectedDoctor.id);
+      setDeleteModalOpen(false);
+      setSelectedDoctor(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setSelectedDoctor(null);
+  };
+
   return (
     <AdminLayout active="doctors" setAdminLoggedIn={setAdminLoggedIn}>
+      <DeleteDoctorModal
+        doctor={selectedDoctor}
+        open={deleteModalOpen}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
       <div className="doctor-main">
         <div className="doctor-header-row">
           <div>
@@ -72,7 +100,7 @@ export default function DoctorManagement({ setAdminLoggedIn }) {
                     </td>
                     <td>
                       <button className="doctor-action-btn" onClick={() => navigate(`/admin/doctors/edit/${doc.id}`)}><span role="img" aria-label="edit">✏️</span></button>
-                      <button className="doctor-action-btn" onClick={() => deleteDoctor(doc.id)}><span role="img" aria-label="delete">🗑️</span></button>
+                      <button className="doctor-action-btn" onClick={() => handleDeleteClick(doc)}><span role="img" aria-label="delete">🗑️</span></button>
                     </td>
                   </tr>
                 ))}

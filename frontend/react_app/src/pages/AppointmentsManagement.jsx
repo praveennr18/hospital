@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
+import DeleteAppointmentModal from './DeleteAppointmentModal';
 import './AppointmentsManagement.css';
 import AdminLayout from './AdminLayout';
 import { useAdminData } from './AdminDataContext';
 
 function AppointmentsManagement({ setAdminLoggedIn }) {
-  const { appointments, addAppointment } = useAdminData();
-  const [showModal, setShowModal] = React.useState(false);
-  const [search, setSearch] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState('All');
-  const [typeFilter, setTypeFilter] = React.useState('All');
-  const [tab, setTab] = React.useState('All');
+  const { appointments, addAppointment, deleteAppointment } = useAdminData();
+  const [showModal, setShowModal] = useState(false);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [tab, setTab] = useState('All');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
   const statusOptions = Array.from(new Set(appointments.map(a => a.status)));
   const typeOptions = Array.from(new Set(appointments.map(a => a.type)));
 
@@ -140,8 +143,32 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
     }
   };
 
+  const handleCancelClick = (appointment) => {
+    setSelectedAppointment(appointment);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = (reason) => {
+    if (selectedAppointment) {
+      deleteAppointment(selectedAppointment.id, reason);
+      setDeleteModalOpen(false);
+      setSelectedAppointment(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
+    setSelectedAppointment(null);
+  };
+
   return (
     <AdminLayout active="appointments" setAdminLoggedIn={setAdminLoggedIn}>
+      <DeleteAppointmentModal
+        appointment={selectedAppointment}
+        open={deleteModalOpen}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
       <div className="appointments-mgmt-container">
         <div className="appointments-mgmt-header">
           <div>
@@ -278,7 +305,7 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
                     <td><span className={statusClass(a.status)}>{a.status}</span></td>
                     <td>
                       {a.status === 'Scheduled' ? (
-                        <button className="cancel-btn">&#10006; Cancel</button>
+                        <button className="cancel-btn" onClick={() => handleCancelClick(a)}>&#10006; Cancel</button>
                       ) : null}
                     </td>
                   </tr>
