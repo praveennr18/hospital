@@ -2,6 +2,8 @@ import React from 'react';
 import './AppointmentsManagement.css';
 import AdminLayout from './AdminLayout';
 import './AppointmentsManagement.css';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
+import './ConfirmDeleteModal.css';
 
 const appointments = [
   { id: 1, patient: 'Sarah Johnson', patientInitials: 'SJ', doctor: 'Dr. Smith', date: '3/25/2024', time: '09:00', type: 'Follow-Up', status: 'Scheduled' },
@@ -27,7 +29,9 @@ const statusClass = status => {
 };
 
 function AppointmentsManagement({ setAdminLoggedIn }) {
-  const [showModal, setShowModal] = React.useState(false);
+  const [showScheduleModal, setShowScheduleModal] = React.useState(false);
+  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
+  const [selectedAppointment, setSelectedAppointment] = React.useState(null);
   const [appointmentsState, setAppointmentsState] = React.useState(appointments);
   const [search, setSearch] = React.useState('');
   const [statusFilter, setStatusFilter] = React.useState('All');
@@ -153,10 +157,30 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
       reason: form.reason,
     };
     setAppointmentsState([newAppointment, ...appointmentsState]);
-    setShowModal(false);
+    setShowScheduleModal(false);
     setForm({ patient: '', department: '', doctor: '', date: '', time: '', type: '', reason: '' });
     setFormError('');
   }
+  const handleCancelClick = (appointment) => {
+    setSelectedAppointment(appointment);
+    setShowDeleteModal(true);
+  };
+  const handleModalClose = () => {
+    setShowDeleteModal(false);
+    setSelectedAppointment(null);
+  };
+  const handleScheduleClick = () => {
+    setShowScheduleModal(true);
+  };
+  const handleScheduleModalClose = () => {
+    setShowScheduleModal(false);
+  };
+  const handleModalConfirm = (reason) => {
+    // You can use the reason value here
+    // Example: console.log('Reason:', reason);
+    setShowDeleteModal(false);
+    setSelectedAppointment(null);
+  };
   return (
     <AdminLayout active="appointments" setAdminLoggedIn={setAdminLoggedIn}>
       <div className="appointments-mgmt-container">
@@ -165,10 +189,10 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
             <h1>Appointment Management</h1>
             <p>Monitor and manage all appointments across the system</p>
           </div>
-          <button className="schedule-btn" onClick={() => setShowModal(true)}>+ Schedule Appointment</button>
+          <button className="schedule-btn" onClick={handleScheduleClick}>+ Schedule Appointment</button>
         </div>
         <div className="appointments-mgmt-card">
-          {showModal && (
+          {showScheduleModal && (
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>Schedule New Appointment</h2>
@@ -215,7 +239,7 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
                   </label>
                   {formError && <div className="form-error">{formError}</div>}
                   <div className="form-actions">
-                    <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
+                    <button type="button" onClick={() => setShowScheduleModal(false)}>Cancel</button>
                     <button type="submit" className="schedule-btn-modal">Schedule Appointment</button>
                   </div>
                 </form>
@@ -284,7 +308,7 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
                     <td><span className={statusClass(a.status)}>{a.status}</span></td>
                     <td>
                       {a.status === 'Scheduled' ? (
-                        <button className="cancel-btn">&#10006; Cancel</button>
+                        <button className="cancel-btn" onClick={() => handleCancelClick(a)}>&#10006; Cancel</button>
                       ) : null}
                     </td>
                   </tr>
@@ -293,6 +317,15 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
             </table>
           </div>
         </div>
+        <ConfirmDeleteModal
+          open={showDeleteModal}
+          onClose={handleModalClose}
+          onConfirm={handleModalConfirm}
+          type="Appointment"
+          name={selectedAppointment?.patient}
+          id={selectedAppointment?.id}
+          requireReason={true}
+        />
       </div>
     </AdminLayout>
   );

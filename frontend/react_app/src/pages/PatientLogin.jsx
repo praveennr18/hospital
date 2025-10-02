@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './PatientLogin.css';
+import logo from '../assets/healthcare_logo.png';
 
 const roles = [
   { label: 'Patient', description: 'Patient Portal - View your medical information and appointments' },
@@ -34,7 +35,9 @@ export default function PatientLogin({ onLogin, setAdminLoggedIn }) {
     <div className="login-background">
       <div className="login-card">
         <div className="login-logo-box">
-          <div className="login-logo"><span>\u23AF</span></div>
+          <div className="login-logo">
+            <img src={logo} alt="HealthCare Pro Logo" style={{width:64,height:64, borderRadius:16}} />
+          </div>
         </div>
         <h2 className="login-title">HealthCare Pro</h2>
         <p className="login-subtitle">Smart Appointment & Patient Management System</p>
