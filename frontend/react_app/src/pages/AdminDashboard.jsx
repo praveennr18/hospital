@@ -1,5 +1,8 @@
 import AdminLayout from './AdminLayout';
+import { useAdminData } from './AdminDataContext';
 export default function AdminDashboard({ setAdminLoggedIn }) {
+  const { doctors, patients } = useAdminData();
+  // For today's appointments, you may need to fetch from appointments context or state
   return (
     <AdminLayout active="dashboard" setAdminLoggedIn={setAdminLoggedIn}>
       <header className="admin-header">
@@ -9,7 +12,7 @@ export default function AdminDashboard({ setAdminLoggedIn }) {
       <div className="admin-cards-row">
         <div className="admin-card">
           <div className="admin-card-title">Total Patients</div>
-          <div className="admin-card-value">156</div>
+          <div className="admin-card-value">{patients.length}</div>
           <div className="admin-card-desc">Registered patients</div>
         </div>
         <div className="admin-card">
@@ -19,7 +22,7 @@ export default function AdminDashboard({ setAdminLoggedIn }) {
         </div>
         <div className="admin-card">
           <div className="admin-card-title">Total Doctors</div>
-          <div className="admin-card-value">12</div>
+          <div className="admin-card-value">{doctors.length}</div>
           <div className="admin-card-desc">Medical staff</div>
         </div>
       </div>

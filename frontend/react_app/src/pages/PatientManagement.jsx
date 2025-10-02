@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
 import { useNavigate } from 'react-router-dom';
 import './PatientManagement.css';
+import './ConfirmDeleteModal.css';
 import AdminLayout from './AdminLayout';
 
 import { useAdminData } from './AdminDataContext';
@@ -16,12 +18,30 @@ const bloodColors = {
 export default function PatientManagement({ setAdminLoggedIn }) {
   const { patients, deletePatient } = useAdminData();
   const [search, setSearch] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState(null);
   const navigate = useNavigate();
   const filtered = patients.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
     p.email.toLowerCase().includes(search.toLowerCase()) ||
     String(p.id).includes(search)
   );
+  const handleDeleteClick = (patient) => {
+    setSelectedPatient(patient);
+    setModalOpen(true);
+    console.log('Modal open:', true, 'Selected patient:', patient);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setSelectedPatient(null);
+  };
+  const handleModalConfirm = () => {
+    if (selectedPatient) {
+      deletePatient(selectedPatient.id);
+    }
+    setModalOpen(false);
+    setSelectedPatient(null);
+  };
   return (
   <AdminLayout active="patients" setAdminLoggedIn={setAdminLoggedIn}>
       <div className="patient-main">
@@ -74,12 +94,21 @@ export default function PatientManagement({ setAdminLoggedIn }) {
                     <td>{p.lastVisit}</td>
                     <td>
                       <button className="patient-action-btn" onClick={() => navigate(`/admin/patients/edit/${p.id}`)}><span role="img" aria-label="edit">✏️</span></button>
-                      <button className="patient-action-btn" onClick={() => deletePatient(p.id)}><span role="img" aria-label="delete">🗑️</span></button>
+                      <button className="patient-action-btn" onClick={() => handleDeleteClick(p)}><span role="img" aria-label="delete">🗑️</span></button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            <ConfirmDeleteModal
+              open={modalOpen}
+              onClose={handleModalClose}
+              onConfirm={handleModalConfirm}
+              type="Patient"
+              name={selectedPatient?.name}
+              id={selectedPatient?.id}
+              requireReason={false}
+            />
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import './DoctorManagement.css';
 import AdminLayout from './AdminLayout';
 import { useAdminData } from './AdminDataContext';
 import { useNavigate } from 'react-router-dom';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
+import './ConfirmDeleteModal.css';
 
 const specialtyColors = {
   'Cardiology': 'badge-red',
@@ -16,12 +18,29 @@ const specialtyColors = {
 export default function DoctorManagement({ setAdminLoggedIn }) {
   const { doctors, deleteDoctor } = useAdminData();
   const [search, setSearch] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const navigate = useNavigate();
   const filtered = doctors.filter(d =>
     d.name.toLowerCase().includes(search.toLowerCase()) ||
     d.specialty.toLowerCase().includes(search.toLowerCase()) ||
     d.email.toLowerCase().includes(search.toLowerCase())
   );
+  const handleDeleteClick = (doctor) => {
+    setSelectedDoctor(doctor);
+    setModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setSelectedDoctor(null);
+  };
+  const handleModalConfirm = () => {
+    if (selectedDoctor) {
+      deleteDoctor(selectedDoctor.id);
+    }
+    setModalOpen(false);
+    setSelectedDoctor(null);
+  };
   return (
     <AdminLayout active="doctors" setAdminLoggedIn={setAdminLoggedIn}>
       <div className="doctor-main">
@@ -72,7 +91,7 @@ export default function DoctorManagement({ setAdminLoggedIn }) {
                     </td>
                     <td>
                       <button className="doctor-action-btn" onClick={() => navigate(`/admin/doctors/edit/${doc.id}`)}><span role="img" aria-label="edit">✏️</span></button>
-                      <button className="doctor-action-btn" onClick={() => deleteDoctor(doc.id)}><span role="img" aria-label="delete">🗑️</span></button>
+                      <button className="doctor-action-btn" onClick={() => handleDeleteClick(doc)}><span role="img" aria-label="delete">🗑️</span></button>
                     </td>
                   </tr>
                 ))}
@@ -80,6 +99,15 @@ export default function DoctorManagement({ setAdminLoggedIn }) {
             </table>
           </div>
         </div>
+        <ConfirmDeleteModal
+          open={modalOpen}
+          onClose={handleModalClose}
+          onConfirm={handleModalConfirm}
+          type="Doctor"
+          name={selectedDoctor?.name}
+          id={selectedDoctor?.id}
+          requireReason={false}
+        />
       </div>
     </AdminLayout>
   );

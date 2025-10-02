@@ -174,3 +174,92 @@
 .cancel-btn:hover {
   background: #ffeaea;
 }
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 32px rgba(106,90,249,0.12);
+  width: 420px;
+  max-width: 95vw;
+  padding: 32px 28px 24px 28px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.modal-content h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.appt-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 1rem;
+  margin-bottom: 14px;
+  gap: 4px;
+}
+.appt-form input,
+.appt-form select,
+.appt-form textarea {
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  font-size: 1rem;
+  background: #f7f7fa;
+  margin-top: 2px;
+  transition: border 0.2s;
+}
+.appt-form input:focus,
+.appt-form select:focus,
+.appt-form textarea:focus {
+  outline: none;
+  border-color: #7B5AFF;
+}
+.appt-form textarea {
+  min-height: 48px;
+  max-height: 120px;
+  resize: vertical;
+}
+.form-error {
+  color: #e57373;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+.form-actions button {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  background: #eee;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.form-actions button:hover {
+  background: #e0e0e0;
+}
+.schedule-btn-modal {
+  background: linear-gradient(90deg, #6a5af9 0%, #f857a6 100%);
+  color: #fff;
+  font-weight: 500;
+}
+.schedule-btn-modal:hover {
+  background: linear-gradient(90deg, #7B5AFF 0%, #4FC3F7 100%);
+}
