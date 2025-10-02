@@ -9,7 +9,12 @@ export default function EditPatient() {
   const navigate = useNavigate();
   const { patients, editPatient } = useAdminData();
   const patient = patients.find(p => String(p.id) === String(id));
-  const [form, setForm] = React.useState(patient || {});
+  // Split name for form
+  const [form, setForm] = React.useState(patient ? {
+    ...patient,
+    firstName: patient.name ? patient.name.split(' ')[0] : '',
+    lastName: patient.name ? patient.name.split(' ').slice(1).join(' ') : '',
+  } : {});
 
   if (!patient) return <AdminLayout><div>Patient not found</div></AdminLayout>;
 
@@ -19,7 +24,12 @@ export default function EditPatient() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    editPatient(form);
+    // Merge first/last name
+    const updated = {
+      ...form,
+      name: (form.firstName || '') + ' ' + (form.lastName || ''),
+    };
+    editPatient(updated);
     navigate('/admin/patients');
   }
 
