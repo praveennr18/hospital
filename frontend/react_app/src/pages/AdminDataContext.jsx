@@ -1,46 +1,174 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import apiClient from '../api/client';
 
 const AdminDataContext = createContext();
 
-const initialDoctors = [
-  { id: 'DOC001', name: 'Dr. Sarah Wilson', specialty: 'Cardiology', experience: 15, email: 'sarah.wilson@hospital.com', phone: '(555) 234-5678' },
-  { id: 'DOC002', name: 'Dr. Michael Johnson', specialty: 'Neurology', experience: 18, email: 'michael.johnson@hospital.com', phone: '(555) 345-6789' },
-  { id: 'DOC003', name: 'Dr. Emily Brown', specialty: 'Pediatrics', experience: 10, email: 'emily.brown@hospital.com', phone: '(555) 456-7890' },
-  { id: 'DOC004', name: 'Dr. James Lee', specialty: 'Orthopedics', experience: 12, email: 'james.lee@hospital.com', phone: '(555) 567-8901' },
-  { id: 'DOC005', name: 'Dr. Maria Garcia', specialty: 'Dermatology', experience: 14, email: 'maria.garcia@hospital.com', phone: '(555) 678-9012' },
-  { id: 'DOC006', name: 'Dr. Robert Smith', specialty: 'General Medicine', experience: 25, email: 'robert.smith@hospital.com', phone: '(555) 789-0123' },
-];
-
-const initialPatients = [
-  { id: 1, name: 'Sarah Johnson', age: 40, gender: 'Female', blood: 'A+', email: 'sarah.johnson@email.com', phone: '(555) 123-4567', lastVisit: '3/15/2024' },
-  { id: 2, name: 'Michael Chen', age: 53, gender: 'Male', blood: 'O-', email: 'michael.chen@email.com', phone: '(555) 234-5678', lastVisit: '3/10/2024' },
-  { id: 3, name: 'Emily Rodriguez', age: 34, gender: 'Female', blood: 'B+', email: 'emily.rodriguez@email.com', phone: '(555) 345-6789', lastVisit: '2/28/2024' },
-  { id: 4, name: 'Robert Williams', age: 70, gender: 'Male', blood: 'AB+', email: 'robert.williams@email.com', phone: '(555) 456-7890', lastVisit: '3/20/2024' },
-  { id: 5, name: 'Jessica Davis', age: 37, gender: 'Female', blood: 'O+', email: 'jessica.davis@email.com', phone: '(555) 567-8901', lastVisit: '3/5/2024' },
-];
-
 export function AdminDataProvider({ children }) {
-  const [doctors, setDoctors] = useState(initialDoctors);
-  const [patients, setPatients] = useState(initialPatients);
+  const [doctors, setDoctors] = useState([]);
+  const [patients, setPatients] = useState([]);
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const addDoctor = doctor => setDoctors(docs => [...docs, doctor]);
-  const editDoctor = updated => setDoctors(docs => docs.map(d => d.id === updated.id ? updated : d));
-  const deleteDoctor = id => setDoctors(docs => docs.filter(d => d.id !== id));
+  // Load data from API on component mount
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const addPatient = patient => setPatients(pats => [...pats, patient]);
-  const editPatient = updated => setPatients(pats => pats.map(p => p.id === updated.id ? updated : p));
-  const deletePatient = id => setPatients(pats => pats.filter(p => p.id !== id));
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Load all data in parallel
+      const [doctorsResponse, patientsResponse, appointmentsResponse] = await Promise.all([
+        apiClient.getDoctors().catch(() => []),
+        apiClient.getPatients().catch(() => []),
+        apiClient.getAppointments().catch(() => [])
+      ]);
+
+      setDoctors(doctorsResponse);
+      setPatients(patientsResponse);
+      setAppointments(appointmentsResponse);
+    } catch (err) {
+      console.error('Failed to load data:', err);
+      setError('Failed to load data from server');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Doctor management functions
+  const addDoctor = async (doctorData) => {
+    try {
+      const newDoctor = await apiClient.createDoctor(doctorData);
+      setDoctors(docs => [...docs, newDoctor]);
+      return newDoctor;
+    } catch (error) {
+      console.error('Failed to create doctor:', error);
+      throw error;
+    }
+  };
+
+  const editDoctor = async (id, doctorData) => {
+    try {
+      const updatedDoctor = await apiClient.updateDoctor(id, doctorData);
+      setDoctors(docs => docs.map(d => d.id === id ? updatedDoctor : d));
+      return updatedDoctor;
+    } catch (error) {
+      console.error('Failed to update doctor:', error);
+      throw error;
+    }
+  };
+
+  const deleteDoctor = async (id) => {
+    try {
+      await apiClient.deleteDoctor(id);
+      setDoctors(docs => docs.filter(d => d.id !== id));
+    } catch (error) {
+      console.error('Failed to delete doctor:', error);
+      throw error;
+    }
+  };
+
+  // Patient management functions
+  const addPatient = async (patientData) => {
+    try {
+      const result = await apiClient.createPatient(patientData);
+      // result: { patient, username, temp_password }
+      if (result && result.patient) {
+        setPatients(pats => [...pats, result.patient]);
+      }
+      return result;
+    } catch (error) {
+      console.error('Failed to create patient:', error);
+      throw error;
+    }
+  };
+
+  const editPatient = async (id, patientData) => {
+    try {
+      const updatedPatient = await apiClient.updatePatient(id, patientData);
+      setPatients(pats => pats.map(p => p.id === id ? updatedPatient : p));
+      return updatedPatient;
+    } catch (error) {
+      console.error('Failed to update patient:', error);
+      throw error;
+    }
+  };
+
+  const deletePatient = async (id) => {
+    try {
+      await apiClient.deletePatient(id);
+      setPatients(pats => pats.filter(p => p.id !== id));
+    } catch (error) {
+      console.error('Failed to delete patient:', error);
+      throw error;
+    }
+  };
+
+  // Appointment management functions
+  const addAppointment = async (appointmentData) => {
+    try {
+      const newAppointment = await apiClient.createAppointment(appointmentData);
+      setAppointments(appts => [...appts, newAppointment]);
+      return newAppointment;
+    } catch (error) {
+      console.error('Failed to create appointment:', error);
+      throw error;
+    }
+  };
+
+  const editAppointment = async (id, appointmentData) => {
+    try {
+      const updatedAppointment = await apiClient.updateAppointment(id, appointmentData);
+      setAppointments(appts => appts.map(a => a.id === id ? updatedAppointment : a));
+      return updatedAppointment;
+    } catch (error) {
+      console.error('Failed to update appointment:', error);
+      throw error;
+    }
+  };
+
+  const deleteAppointment = async (id) => {
+    try {
+      await apiClient.deleteAppointment(id);
+      setAppointments(appts => appts.filter(a => a.id !== id));
+    } catch (error) {
+      console.error('Failed to delete appointment:', error);
+      throw error;
+    }
+  };
+
+  const value = {
+    doctors, 
+    patients, 
+    appointments,
+    loading,
+    error,
+    addDoctor, 
+    editDoctor, 
+    deleteDoctor,
+    addPatient, 
+    editPatient, 
+    deletePatient,
+    addAppointment, 
+    editAppointment, 
+    deleteAppointment,
+    refreshData: loadData
+  };
 
   return (
-    <AdminDataContext.Provider value={{
-      doctors, addDoctor, editDoctor, deleteDoctor,
-      patients, addPatient, editPatient, deletePatient
-    }}>
+    <AdminDataContext.Provider value={value}>
       {children}
     </AdminDataContext.Provider>
   );
 }
 
 export function useAdminData() {
-  return useContext(AdminDataContext);
+  const context = useContext(AdminDataContext);
+  if (!context) {
+    throw new Error('useAdminData must be used within an AdminDataProvider');
+  }
+  return context;
 }

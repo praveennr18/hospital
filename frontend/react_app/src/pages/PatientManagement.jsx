@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
+import DeletePatientModal from './DeletePatientModal';
 import { useNavigate } from 'react-router-dom';
 import './PatientManagement.css';
-import './ConfirmDeleteModal.css';
 import AdminLayout from './AdminLayout';
 
 import { useAdminData } from './AdminDataContext';
@@ -15,35 +14,52 @@ const bloodColors = {
   'O+': 'badge-green',
 };
 
+
 export default function PatientManagement({ setAdminLoggedIn }) {
   const { patients, deletePatient } = useAdminData();
   const [search, setSearch] = useState('');
-  const [modalOpen, setModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState(null);
   const navigate = useNavigate();
-  const filtered = patients.filter(p =>
-    p.name.toLowerCase().includes(search.toLowerCase()) ||
-    p.email.toLowerCase().includes(search.toLowerCase()) ||
-    String(p.id).includes(search)
-  );
+  // Log patient data for debugging
+  console.log('Patient data:', patients);
+  // Defensive: handle missing fields and backend structure
+  const filtered = (patients || []).filter(p => {
+    const name = p.name || (p.user ? `${p.user.first_name || ''} ${p.user.last_name || ''}`.trim() : '');
+    const email = p.email || (p.user ? p.user.email : '');
+    return (
+      name.toLowerCase().includes(search.toLowerCase()) ||
+      email.toLowerCase().includes(search.toLowerCase()) ||
+      String(p.id).includes(search)
+    );
+  });
+
   const handleDeleteClick = (patient) => {
     setSelectedPatient(patient);
-    setModalOpen(true);
-    console.log('Modal open:', true, 'Selected patient:', patient);
+    setDeleteModalOpen(true);
   };
-  const handleModalClose = () => {
-    setModalOpen(false);
-    setSelectedPatient(null);
-  };
-  const handleModalConfirm = () => {
+
+  const handleDeleteConfirm = () => {
     if (selectedPatient) {
       deletePatient(selectedPatient.id);
+      setDeleteModalOpen(false);
+      setSelectedPatient(null);
     }
-    setModalOpen(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
     setSelectedPatient(null);
   };
+
   return (
-  <AdminLayout active="patients" setAdminLoggedIn={setAdminLoggedIn}>
+    <AdminLayout active="patients" setAdminLoggedIn={setAdminLoggedIn}>
+      <DeletePatientModal
+        patient={selectedPatient}
+        open={deleteModalOpen}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
       <div className="patient-main">
         <div className="patient-header-row">
           <div>
@@ -76,39 +92,45 @@ export default function PatientManagement({ setAdminLoggedIn }) {
                 </tr>
               </thead>
               <tbody>
-                {filtered.map(p => (
-                  <tr key={p.id}>
-                    <td>
-                      <div className="patient-avatar">{p.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
-                      <div className="patient-info">
-                        <div className="patient-name">{p.name}</div>
-                        <div className="patient-id">ID: {p.id}</div>
-                      </div>
-                    </td>
-                    <td>{p.age} years<br/>{p.gender}</td>
-                    <td><span className={`patient-badge ${bloodColors[p.blood]}`}>{p.blood}</span></td>
-                    <td>
-                      <div>{p.email}</div>
-                      <div>{p.phone}</div>
-                    </td>
-                    <td>{p.lastVisit}</td>
-                    <td>
-                      <button className="patient-action-btn" onClick={() => navigate(`/admin/patients/edit/${p.id}`)}><span role="img" aria-label="edit">✏️</span></button>
-                      <button className="patient-action-btn" onClick={() => handleDeleteClick(p)}><span role="img" aria-label="delete">🗑️</span></button>
-                    </td>
-                  </tr>
-                ))}
+                {filtered.map(p => {
+                  // Defensive: support both old and new patient data structures
+                  const name = p.name || (p.user ? `${p.user.first_name || ''} ${p.user.last_name || ''}`.trim() : '');
+                  const email = p.email || (p.user ? p.user.email : '');
+                  const gender = p.gender || (p.user ? p.user.gender : '');
+                  const blood = p.blood || (p.user ? p.user.blood : '');
+                  const phone = p.phone || (p.user ? p.user.phone : '');
+                  const id = p.id;
+                  // Age calculation from dob if available
+                  let age = p.age;
+                  if (!age && p.dob) {
+                    const birthYear = new Date(p.dob).getFullYear();
+                    if (!isNaN(birthYear)) age = new Date().getFullYear() - birthYear;
+                  }
+                  return (
+                    <tr key={id}>
+                      <td>
+                        <div className="patient-avatar">{name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</div>
+                        <div className="patient-info">
+                          <div className="patient-name">{name}</div>
+                          <div className="patient-id">ID: {id}</div>
+                        </div>
+                      </td>
+                      <td>{age ? `${age} years` : ''}<br/>{gender}</td>
+                      <td><span className={`patient-badge ${bloodColors[blood]}`}>{blood}</span></td>
+                      <td>
+                        <div>{email}</div>
+                        <div>{phone}</div>
+                      </td>
+                      <td>{p.lastVisit || ''}</td>
+                      <td>
+                        <button className="patient-action-btn" onClick={() => navigate(`/admin/patients/edit/${id}`)}><span role="img" aria-label="edit">✏️</span></button>
+                        <button className="patient-action-btn" onClick={() => handleDeleteClick(p)}><span role="img" aria-label="delete">🗑️</span></button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
-            <ConfirmDeleteModal
-              open={modalOpen}
-              onClose={handleModalClose}
-              onConfirm={handleModalConfirm}
-              type="Patient"
-              name={selectedPatient?.name}
-              id={selectedPatient?.id}
-              requireReason={false}
-            />
           </div>
         </div>
       </div>

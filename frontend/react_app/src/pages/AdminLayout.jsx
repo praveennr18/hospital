@@ -2,6 +2,7 @@ import './AdminDashboard.css';
 import './AdminLayout.css';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
+import logo from '../assets/healthcare_logo.png';
 
 export default function AdminLayout({ children, active, setAdminLoggedIn }) {
   const navigate = useNavigate();
@@ -12,7 +13,10 @@ export default function AdminLayout({ children, active, setAdminLoggedIn }) {
   return (
     <div className="admin-root">
       <aside className="admin-sidebar">
-        <div className="admin-logo">HealthCare Pro</div>
+        <div className="admin-logo">
+          <img src={logo} alt="HealthCare Pro Logo" style={{height:32, marginRight:8, verticalAlign:'middle'}} />
+          HealthCare Pro
+        </div>
         <nav className="admin-nav">
           <button className={`admin-nav-link${active==='dashboard' ? ' active' : ''}`} onClick={() => navigate('/admin')}>Dashboard</button>
           <button className={`admin-nav-link${active==='doctors' ? ' active' : ''}`} onClick={() => navigate('/admin/doctors')}>Doctors</button>

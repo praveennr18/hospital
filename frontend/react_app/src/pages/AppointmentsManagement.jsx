@@ -1,61 +1,41 @@
-import React from 'react';
+import React, { useState } from 'react';
+import DeleteAppointmentModal from './DeleteAppointmentModal';
 import './AppointmentsManagement.css';
 import AdminLayout from './AdminLayout';
-import './AppointmentsManagement.css';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
-import './ConfirmDeleteModal.css';
-
-const appointments = [
-  { id: 1, patient: 'Sarah Johnson', patientInitials: 'SJ', doctor: 'Dr. Smith', date: '3/25/2024', time: '09:00', type: 'Follow-Up', status: 'Scheduled' },
-  { id: 2, patient: 'Michael Chen', patientInitials: 'MC', doctor: 'Dr. Johnson', date: '3/25/2024', time: '10:30', type: 'Consultation', status: 'Scheduled' },
-  { id: 3, patient: 'Emily Rodriguez', patientInitials: 'ER', doctor: 'Dr. Brown', date: '3/26/2024', time: '14:00', type: 'Follow-Up', status: 'Scheduled' },
-  { id: 4, patient: 'Robert Williams', patientInitials: 'RW', doctor: 'Dr. Wilson', date: '3/24/2024', time: '11:00', type: 'Procedure', status: 'Completed' },
-  { id: 5, patient: 'Jessica Davis', patientInitials: 'JD', doctor: 'Dr. Lee', date: '3/27/2024', time: '15:30', type: 'Consultation', status: 'Scheduled' },
-  { id: 6, patient: 'Sarah Johnson', patientInitials: 'SJ', doctor: 'Dr. Smith', date: '3/22/2024', time: '10:00', type: 'Consultation', status: 'Cancelled' },
-  { id: 7, patient: 'Michael Chen', patientInitials: 'MC', doctor: 'Dr. Johnson', date: '3/23/2024', time: '09:30', type: 'Follow-Up', status: 'No-Show' },
-  { id: 8, patient: 'Emily Rodriguez', patientInitials: 'ER', doctor: 'Dr. Brown', date: '3/21/2024', time: '16:00', type: 'Consultation', status: 'Cancelled' },
-  { id: 9, patient: 'Robert Williams', patientInitials: 'RW', doctor: 'Dr. Wilson', date: '4/5/2024', time: '11:30', type: 'Follow-Up', status: 'Scheduled' },
-  { id: 10, patient: 'Jessica Davis', patientInitials: 'JD', doctor: 'Dr. Lee', date: '4/10/2024', time: '13:00', type: 'Consultation', status: 'Scheduled' },
-];
-
-const statusClass = status => {
-  switch (status) {
-    case 'Scheduled': return 'status scheduled';
-    case 'Completed': return 'status completed';
-    case 'Cancelled': return 'status cancelled';
-    case 'No-Show': return 'status noshow';
-    default: return 'status';
-  }
-};
+import { useAdminData } from './AdminDataContext';
 
 function AppointmentsManagement({ setAdminLoggedIn }) {
-  const [showScheduleModal, setShowScheduleModal] = React.useState(false);
-  const [showDeleteModal, setShowDeleteModal] = React.useState(false);
-  const [selectedAppointment, setSelectedAppointment] = React.useState(null);
-  const [appointmentsState, setAppointmentsState] = React.useState(appointments);
-  const [search, setSearch] = React.useState('');
-  const [statusFilter, setStatusFilter] = React.useState('All');
-  const [typeFilter, setTypeFilter] = React.useState('All');
-  const [tab, setTab] = React.useState('All');
-  const statusOptions = Array.from(new Set(appointmentsState.map(a => a.status)));
-  const typeOptions = Array.from(new Set(appointmentsState.map(a => a.type)));
+  const { appointments, addAppointment, deleteAppointment } = useAdminData();
+  const [showModal, setShowModal] = useState(false);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('All');
+  const [typeFilter, setTypeFilter] = useState('All');
+  const [tab, setTab] = useState('All');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const statusOptions = Array.from(new Set(appointments.map(a => a.status)));
+  const typeOptions = Array.from(new Set(appointments.map(a => a.type)));
 
   // Helper to parse date string (assume format: YYYY-MM-DD or similar)
   function parseDate(dateStr) {
-    // Try to parse as ISO, fallback to Date constructor
     return new Date(dateStr);
   }
-
-  // Date filter logic
   const now = new Date();
   const todayStr = now.toISOString().slice(0, 10);
   const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+  startOfWeek.setDate(now.getDate() - now.getDay());
   const endOfWeek = new Date(startOfWeek);
-  endOfWeek.setDate(startOfWeek.getDate() + 6); // Saturday
-
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
   function isToday(dateStr) {
-    return dateStr === todayStr;
+    // Accept both ISO and MM/DD/YYYY formats
+    let d = new Date(dateStr);
+    if (isNaN(d)) {
+      const parts = dateStr.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (parts) {
+        d = new Date(`${parts[3]}-${('0'+parts[1]).slice(-2)}-${('0'+parts[2]).slice(-2)}`);
+      }
+    }
+    return d.toISOString().slice(0, 10) === todayStr;
   }
   function isThisWeek(dateStr) {
     const d = parseDate(dateStr);
@@ -65,8 +45,6 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
     const d = parseDate(dateStr);
     return d > now;
   }
-
-  // Tab filter logic
   function tabFilter(a) {
     if (tab === 'All') return true;
     if (tab === 'Today') return isToday(a.date);
@@ -74,9 +52,7 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
     if (tab === 'Upcoming') return isUpcoming(a.date);
     return true;
   }
-
-  // Filtered lists for counts
-  const filteredAll = appointmentsState.filter(a => {
+  const filteredAll = appointments.filter(a => {
     const matchesSearch = a.patient.toLowerCase().includes(search.toLowerCase()) ||
       a.doctor.toLowerCase().includes(search.toLowerCase()) ||
       String(a.id).includes(search);
@@ -126,24 +102,20 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
     'Follow-Up',
     'Procedure',
   ];
-
   function getInitials(name) {
     return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
   }
-
   function handleFormChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
-
   function handleFormSubmit(e) {
     e.preventDefault();
-    // Validate
     if (!form.patient || !form.department || !form.doctor || !form.date || !form.time || !form.type || !form.reason) {
       setFormError('Please fill all required fields.');
       return;
     }
-    // Add new appointment
-    const newId = appointmentsState.length ? Math.max(...appointmentsState.map(a => a.id)) + 1 : 1;
+    // Add new appointment to context
+    const newId = appointments.length ? Math.max(...appointments.map(a => a.id)) + 1 : 1;
     const newAppointment = {
       id: newId,
       patient: form.patient,
@@ -156,43 +128,57 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
       department: form.department,
       reason: form.reason,
     };
-    setAppointmentsState([newAppointment, ...appointmentsState]);
-    setShowScheduleModal(false);
+    addAppointment(newAppointment);
+    setShowModal(false);
     setForm({ patient: '', department: '', doctor: '', date: '', time: '', type: '', reason: '' });
     setFormError('');
   }
+  const statusClass = status => {
+    switch (status) {
+      case 'Scheduled': return 'status scheduled';
+      case 'Completed': return 'status completed';
+      case 'Cancelled': return 'status cancelled';
+      case 'No-Show': return 'status noshow';
+      default: return 'status';
+    }
+  };
+
   const handleCancelClick = (appointment) => {
     setSelectedAppointment(appointment);
-    setShowDeleteModal(true);
+    setDeleteModalOpen(true);
   };
-  const handleModalClose = () => {
-    setShowDeleteModal(false);
+
+  const handleDeleteConfirm = (reason) => {
+    if (selectedAppointment) {
+      deleteAppointment(selectedAppointment.id, reason);
+      setDeleteModalOpen(false);
+      setSelectedAppointment(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteModalOpen(false);
     setSelectedAppointment(null);
   };
-  const handleScheduleClick = () => {
-    setShowScheduleModal(true);
-  };
-  const handleScheduleModalClose = () => {
-    setShowScheduleModal(false);
-  };
-  const handleModalConfirm = (reason) => {
-    // You can use the reason value here
-    // Example: console.log('Reason:', reason);
-    setShowDeleteModal(false);
-    setSelectedAppointment(null);
-  };
+
   return (
     <AdminLayout active="appointments" setAdminLoggedIn={setAdminLoggedIn}>
+      <DeleteAppointmentModal
+        appointment={selectedAppointment}
+        open={deleteModalOpen}
+        onCancel={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
       <div className="appointments-mgmt-container">
         <div className="appointments-mgmt-header">
           <div>
             <h1>Appointment Management</h1>
             <p>Monitor and manage all appointments across the system</p>
           </div>
-          <button className="schedule-btn" onClick={handleScheduleClick}>+ Schedule Appointment</button>
+          <button className="schedule-btn" onClick={() => setShowModal(true)}>+ Schedule Appointment</button>
         </div>
         <div className="appointments-mgmt-card">
-          {showScheduleModal && (
+          {showModal && (
             <div className="modal-overlay">
               <div className="modal-content">
                 <h2>Schedule New Appointment</h2>
@@ -223,8 +209,19 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
                     <input name="date" type="date" value={form.date} onChange={handleFormChange} required />
                   </label>
                   <label>
-                    <span>Preferred Time *</span>
-                    <input name="time" type="time" value={form.time} onChange={handleFormChange} required />
+                <span>Preferred Time *</span>
+                <select name="time" value={form.time} onChange={handleFormChange} required>
+                 <option value="">Select time slot</option>
+                 <option value="09:00">09:00</option>
+                 <option value="09:30">09:30</option>
+                 <option value="10:00">10:00</option>
+                 <option value="10:30">10:30</option>
+                 <option value="11:00">11:00</option>
+                 <option value="14:00">14:00</option>
+                 <option value="15:30">15:30</option>
+                 <option value="16:00">16:00</option>
+                 <option value="16:30">16:30</option>
+                </select>
                   </label>
                   <label>
                     <span>Appointment Type *</span>
@@ -239,7 +236,7 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
                   </label>
                   {formError && <div className="form-error">{formError}</div>}
                   <div className="form-actions">
-                    <button type="button" onClick={() => setShowScheduleModal(false)}>Cancel</button>
+                    <button type="button" onClick={() => setShowModal(false)}>Cancel</button>
                     <button type="submit" className="schedule-btn-modal">Schedule Appointment</button>
                   </div>
                 </form>
@@ -317,15 +314,6 @@ function AppointmentsManagement({ setAdminLoggedIn }) {
             </table>
           </div>
         </div>
-        <ConfirmDeleteModal
-          open={showDeleteModal}
-          onClose={handleModalClose}
-          onConfirm={handleModalConfirm}
-          type="Appointment"
-          name={selectedAppointment?.patient}
-          id={selectedAppointment?.id}
-          requireReason={true}
-        />
       </div>
     </AdminLayout>
   );

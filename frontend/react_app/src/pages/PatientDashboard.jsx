@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
+import logo from '../assets/healthcare_logo.png';
 import { useNavigate } from 'react-router-dom';
 import './PatientDashboard.css';
 
-const appointments = [
+const initialAppointments = [
   {
     doctor: 'Dr. Sarah Wilson',
     department: 'Cardiology Department',
-    date: 'Nov 15, 2024',
-    time: '10:30 AM',
+    date: '2024-11-15',
+    time: '10:30',
     status: 'Follow-up',
     statusType: 'followup',
   },
   {
     doctor: 'Dr. Michael Johnson',
     department: 'Neurology Department',
-    date: 'Nov 20, 2024',
-    time: '2:00 PM',
+    date: '2024-11-20',
+    time: '14:00',
     status: 'Consultation',
     statusType: 'consultation',
   },
@@ -40,7 +41,42 @@ export default function PatientDashboard({ onLogout }) {
     'Lisinopril 10mg',
   ]);
   const [medicationInput, setMedicationInput] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({
+    department: '',
+    doctor: '',
+    date: '',
+    time: '',
+    type: '',
+    reason: '',
+  });
+  const [appointmentsList, setAppointmentsList] = useState(initialAppointments);
   const navigate = useNavigate();
+
+  const departmentsList = [
+    'Cardiology Department',
+    'Neurology Department',
+    'General Medicine',
+    'Orthopedics',
+    'Dermatology',
+  ];
+  const doctorsList = [
+    'Dr. Sarah Wilson',
+    'Dr. Michael Johnson',
+    'Dr. Smith',
+    'Dr. Johnson',
+    'Dr. Brown',
+    'Dr. Lee',
+    'Dr. Wilson',
+  ];
+  const timeslotsList = [
+    '09:00', '09:30', '10:00', '10:30', '11:00', '14:00', '15:30', '16:00', '16:30',
+  ];
+  const appointmentTypes = [
+    'follow-up',
+    'consultation',
+    'procedure',
+  ];
 
   const handleAddMedical = () => {
     const value = medicalInput.trim();
@@ -78,11 +114,33 @@ export default function PatientDashboard({ onLogout }) {
     setMedications(medications.filter((m) => m !== item));
   };
 
+  const handleFormChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSchedule = (e) => {
+    e.preventDefault();
+    setAppointmentsList([
+      ...appointmentsList,
+      {
+        doctor: form.doctor,
+        department: form.department,
+        date: form.date,
+        time: form.time,
+        status: form.type.charAt(0).toUpperCase() + form.type.slice(1),
+        statusType: form.type,
+        reason: form.reason,
+      }
+    ]);
+    setShowModal(false);
+    setForm({ department: '', doctor: '', date: '', time: '', type: '', reason: '' });
+  };
+
   return (
     <div className="pdash-root">
       <aside className="pdash-sidebar">
         <div className="pdash-logo">
-          <span className="pdash-logo-icon">&#8963;</span>
+          <img src={logo} alt="HealthCare Pro Logo" style={{height:32, marginRight:8, verticalAlign:'middle'}} />
           <span className="pdash-logo-text">HealthCare Pro</span>
         </div>
         <nav className="pdash-nav">
@@ -110,11 +168,11 @@ export default function PatientDashboard({ onLogout }) {
           <div className="pdash-appt-tab">
             <div className="pdash-appt-header-row">
               <div className="pdash-appt-header-title">Your Appointments</div>
-              <button className="pdash-schedule-btn" style={{marginLeft:'auto'}}>+ Schedule Appointment</button>
+              <button className="pdash-schedule-btn" style={{marginLeft:'auto'}} onClick={()=>setShowModal(true)}>+ Schedule Appointment</button>
             </div>
             <div className="pdash-appt-header-desc">Manage your upcoming appointments</div>
             <div className="pdash-appt-list">
-              {appointments.map((appt, i) => (
+              {appointmentsList.map((appt, i) => (
                 <div className="pdash-appt-card" key={i}>
                   <div className="pdash-appt-icon">&#128138;</div>
                   <div className="pdash-appt-info">
@@ -171,22 +229,26 @@ export default function PatientDashboard({ onLogout }) {
                   <input value="123 Main St, Springfield, IL 62701" readOnly />
                 </div>
                 <div className="pdash-info-note">To update personal information, please contact the administration office.</div>
-                <button className="pdash-schedule-btn-wide">&#128197; Schedule Appointment</button>
+                <button className="pdash-schedule-btn-wide" onClick={() => setShowModal(true)}>&#128197; Schedule Appointment</button>
               </div>
             </div>
             <div className="pdash-overview-right">
               <div className="pdash-card pdash-health-summary">
-                <div className="pdash-card-title"><span role="img" aria-label="heart">&#10084;&#65039;</span> Health Summary</div>
-                <div className="pdash-summary-row">
-                  <div className="pdash-summary-box pdash-summary-allergy">
-                    <div className="pdash-summary-num">2</div>
-                    <div className="pdash-summary-label">Known Allergies</div>
+                  <div className="pdash-card-title"><span role="img" aria-label="heart">&#10084;&#65039;</span> Health Summary</div>
+                  <div className="pdash-summary-row">
+                    <div className="pdash-summary-box pdash-summary-allergy">
+                      <div className="pdash-summary-num">{allergies.length}</div>
+                      <div className="pdash-summary-label">Known Allergies</div>
+                    </div>
+                    <div className="pdash-summary-box pdash-summary-med">
+                      <div className="pdash-summary-num">{medications.length}</div>
+                      <div className="pdash-summary-label">Current Medications</div>
+                    </div>
+                    <div className="pdash-summary-box pdash-summary-history">
+                      <div className="pdash-summary-num">{medicalHistory.length}</div>
+                      <div className="pdash-summary-label">Medical History</div>
+                    </div>
                   </div>
-                  <div className="pdash-summary-box pdash-summary-med">
-                    <div className="pdash-summary-num">2</div>
-                    <div className="pdash-summary-label">Current Medications</div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -255,6 +317,47 @@ export default function PatientDashboard({ onLogout }) {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+        {showModal && (
+          <div className="doc-app-modal-overlay">
+            <div className="doc-app-modal">
+              <div className="doc-app-modal-header">
+                <span className="doc-app-modal-title"><span className="icon">&#128197;</span> Schedule New Appointment</span>
+                <button className="doc-app-modal-close" onClick={() => setShowModal(false)}>&times;</button>
+              </div>
+              <div className="doc-app-modal-desc">Fill in the details below to schedule your appointment. We'll confirm your request shortly.</div>
+              <form className="doc-app-modal-form" onSubmit={handleSchedule}>
+                <label className="doc-app-modal-label">&#129658; Department *</label>
+                <select name="department" value={form.department} onChange={handleFormChange} required>
+                  <option value="">Select department</option>
+                  {departmentsList.map(dep => <option key={dep} value={dep}>{dep}</option>)}
+                </select>
+                <label className="doc-app-modal-label">&#128104;&#8205;&#127891; Preferred Doctor *</label>
+                <select name="doctor" value={form.doctor} onChange={handleFormChange} required>
+                  <option value="">Select doctor</option>
+                  {doctorsList.map(doc => <option key={doc} value={doc}>{doc}</option>)}
+                </select>
+                <label className="doc-app-modal-label">&#128197; Appointment Date *</label>
+                <input name="date" type="date" value={form.date} onChange={handleFormChange} required />
+                <label className="doc-app-modal-label">&#128337; Preferred Time *</label>
+                <select name="time" value={form.time} onChange={handleFormChange} required>
+                  <option value="">Select time slot</option>
+                  {timeslotsList.map(slot => <option key={slot} value={slot}>{slot}</option>)}
+                </select>
+                <label className="doc-app-modal-label">Appointment Type *</label>
+                <select name="type" value={form.type} onChange={handleFormChange} required>
+                  <option value="">Select appointment type</option>
+                  {appointmentTypes.map(type => <option key={type} value={type}>{type.charAt(0).toUpperCase() + type.slice(1)}</option>)}
+                </select>
+                <label className="doc-app-modal-label">Reason for Visit *</label>
+                <textarea name="reason" value={form.reason} onChange={handleFormChange} required placeholder="Please describe your symptoms or reason for the appointment..." />
+                <div className="doc-app-modal-actions">
+                  <button type="button" className="doc-app-modal-cancel" onClick={() => setShowModal(false)}>Cancel</button>
+                  <button type="submit" className="doc-app-modal-submit">Schedule Appointment</button>
+                </div>
+              </form>
             </div>
           </div>
         )}
