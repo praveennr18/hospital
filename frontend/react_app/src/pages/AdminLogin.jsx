@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AdminLogin.css';
+import logo from '../assets/healthcare_logo.png';
 
 export default function AdminLogin({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -19,6 +20,9 @@ export default function AdminLogin({ onLogin }) {
   return (
     <div className="admin-login-root">
       <form className="admin-login-form" onSubmit={handleSubmit}>
+        <div style={{textAlign:'center', marginBottom:12}}>
+          <img src={logo} alt="HealthCare Pro Logo" style={{height:48, marginBottom:8}} />
+        </div>
         <h2>Admin Login</h2>
         <input
           type="text"
