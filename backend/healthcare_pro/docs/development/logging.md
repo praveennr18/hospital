@@ -136,20 +136,32 @@ LOG_BACKUP_COUNT=3        # Reduced from 5 to 3
 
 ## 📊 Log Examples
 
-### **Successful API Request**
+### **Successful API Request (Authenticated User)**
 ```
-2025-10-01 15:44:34 - INFO - GET /api/doctors/dashboard/ - Status: 200 - User: john.smith@hospital.com - Duration: 45ms
+2025-10-01 16:30:00 - INFO - GET /api/doctors/dashboard/ - Status: 200 - User: john.smith@hospital.com (doctor) - Duration: 45ms
+```
+
+### **Successful API Request (Different Role)**
+```
+2025-10-01 16:30:01 - INFO - GET /api/patients/my/dashboard/ - Status: 200 - User: sarah.johnson@email.com (patient) - Duration: 38ms
+```
+
+### **Admin API Request**
+```
+2025-10-01 16:30:02 - INFO - GET /api/accounts/admin/users/ - Status: 200 - User: admin@hospital.com (admin) - Duration: 67ms
 ```
 
 ### **Authentication Error**
 ```
-2025-10-01 15:44:35 - WARNING - POST /api/accounts/profile/ - Status: 401 - User: Anonymous - Duration: 12ms
+2025-10-01 16:30:03 - WARNING - GET /api/accounts/profile/ - Status: 401 - User: Anonymous - Duration: 12ms
 ```
 
-### **Server Error**
+### **Login Request (Before Authentication)**
 ```
-2025-10-01 15:44:36 - ERROR - GET /api/patients/999/ - Status: 500 - User: admin@hospital.com - Duration: 156ms
+2025-10-01 16:30:04 - INFO - POST /api/accounts/login/ - Status: 200 - User: Anonymous - Duration: 156ms
 ```
+
+**Note**: Login requests show "Anonymous" because authentication happens after the request is processed. Subsequent authenticated requests will show the user's email and role.
 
 ## 🚀 **RESULT: CLEAN & SIMPLE LOGGING**
 

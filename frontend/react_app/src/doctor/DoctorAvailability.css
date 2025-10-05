@@ -1,0 +1,317 @@
+/* Main layout */
+.doc-avail-main {
+  width: 100%;
+  padding: 40px 48px 32px 48px;
+  box-sizing: border-box;
+}
+
+.doc-avail-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.doc-avail-header-title {
+  font-size: 2.1rem;
+  font-weight: bold;
+  color: #222;
+}
+.doc-avail-header-desc {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-bottom: 18px;
+}
+.doc-avail-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.doc-avail-save-btn {
+  background: #2b8a3e;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px #2b8a3e22;
+  transition: background 0.18s;
+}
+.doc-avail-save-btn:hover {
+  background: #228b22;
+}
+.doc-avail-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.doc-avail-refresh,
+.doc-avail-reset-btn {
+  background: #f7f8fa;
+  color: #3b5bdb;
+  border: 1px solid #e3eaff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+.doc-avail-reset-btn {
+  color: #e8590c;
+  border-color: #ffe3e3;
+}
+.doc-avail-refresh:hover:not(:disabled) {
+  background: #e6edff;
+}
+.doc-avail-reset-btn:hover:not(:disabled) {
+  background: #fff4e6;
+}
+.doc-avail-refresh:disabled,
+.doc-avail-reset-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.doc-avail-error {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fff5f5;
+  color: #c92a2a;
+  border: 1px solid #ffa8a8;
+}
+.doc-avail-feedback {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #e6f9e8;
+  color: #2b8a3e;
+  border: 1px solid #b2f2bb;
+}
+
+.doc-avail-loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  height: 70vh;
+  color: #6c757d;
+}
+.doc-avail-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #dbe4ff;
+  border-top-color: #3b5bdb;
+  border-radius: 50%;
+  animation: docAvailSpin 0.8s linear infinite;
+}
+@keyframes docAvailSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.doc-avail-card {
+  background: linear-gradient(135deg,#f5f7ff 0%,#f7f8fa 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 #0001;
+  padding: 24px 0 0 0;
+}
+.doc-avail-card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #3b5bdb;
+  margin-left: 32px;
+  margin-top: 12px;
+}
+.doc-avail-card-desc {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-left: 32px;
+  margin-bottom: 12px;
+}
+
+.doc-avail-day-block {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px #0001;
+  margin: 24px 32px 0 32px;
+  padding: 18px 24px 12px 24px;
+}
+.doc-avail-day-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.doc-avail-day-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #222;
+}
+.doc-avail-day-active {
+  background: #e6f9e8;
+  color: #2b8a3e;
+  font-size: 0.98rem;
+  font-weight: 500;
+  border-radius: 10px;
+  padding: 2px 12px;
+  margin-left: 12px;
+}
+.doc-avail-day-inactive {
+  background: #f1f3f5;
+  color: #bbb;
+  font-size: 0.98rem;
+  font-weight: 500;
+  border-radius: 10px;
+  padding: 2px 12px;
+  margin-left: 12px;
+}
+.doc-avail-day-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.doc-avail-add-slot {
+  background: #fff;
+  color: #3b5bdb;
+  border: 1px solid #e3eaff;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.97rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.doc-avail-add-slot:hover {
+  background: #e6edff;
+}
+.doc-avail-add-slot:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.doc-avail-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+}
+.doc-avail-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.doc-avail-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #eee;
+  border-radius: 22px;
+  transition: .4s;
+}
+.doc-avail-switch input:checked + .doc-avail-slider {
+  background-color: #222;
+}
+.doc-avail-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: .4s;
+}
+.doc-avail-switch input:checked + .doc-avail-slider:before {
+  transform: translateX(16px);
+}
+
+.doc-avail-slot-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  background: #f7f8fa;
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.doc-avail-empty {
+  margin: 12px 0 8px 8px;
+  color: #bbb;
+  font-size: 1.05rem;
+}
+.doc-avail-time-select {
+  border: none;
+  background: #fff;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 1px 4px #0001;
+}
+.doc-avail-to {
+  color: #888;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.doc-avail-switch-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 12px;
+}
+.doc-avail-switch-label input {
+  display: none;
+}
+.doc-avail-switch-label .doc-avail-slider {
+  width: 38px;
+  height: 22px;
+  background: #eee;
+  border-radius: 22px;
+  position: relative;
+  transition: .4s;
+}
+.doc-avail-switch-label input:checked + .doc-avail-slider {
+  background: #222;
+}
+.doc-avail-switch-label .doc-avail-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: .4s;
+}
+.doc-avail-switch-label input:checked + .doc-avail-slider:before {
+  transform: translateX(16px);
+}
+.doc-avail-switch-text {
+  color: #222;
+  font-size: 1.01rem;
+  font-weight: 500;
+  margin-left: 4px;
+}
+.doc-avail-remove-slot {
+  background: #fff;
+  color: #e03131;
+  border: 1px solid #ffe3e3;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.doc-avail-remove-slot:hover {
+  background: #ffe3e3;
+}
+.doc-avail-remove-slot:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

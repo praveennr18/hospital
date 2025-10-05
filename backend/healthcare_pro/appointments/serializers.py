@@ -25,7 +25,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
             'id', 'patient', 'doctor', 'patient_name', 'doctor_name',
             'appointment_date', 'appointment_time', 'appointment_datetime',
             'end_time', 'duration', 'appointment_type', 'status',
-            'chief_complaint', 'notes', 'doctor_notes', 
+            'chief_complaint', 'notes', 'doctor_notes', 'cancellation_reason',
             'consultation_fee', 'is_paid', 'is_past', 'can_be_cancelled',
             'created_at', 'updated_at'
         ]

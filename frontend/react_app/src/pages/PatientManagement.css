@@ -1,0 +1,173 @@
+.patient-main {
+  padding: 2.5rem 2.5rem 2.5rem 2rem;
+}
+.patient-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.patient-header-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+.patient-header-desc {
+  color: #888;
+  font-size: 1.1rem;
+}
+.patient-add-btn {
+  background: #1da1f2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.patient-add-btn:hover {
+  background: #2563eb;
+}
+.patient-directory-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 2rem 2.5rem;
+  margin-top: 1.5rem;
+}
+.patient-directory-title {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #6c63ff;
+  margin-bottom: 0.2rem;
+}
+.patient-directory-desc {
+  color: #888;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+.patient-search-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+}
+.patient-search {
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  border: 1px solid #ececec;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.patient-search:focus {
+  border: 1.5px solid #6c63ff;
+}
+.patient-refresh-btn {
+  padding: 0.75rem 1.4rem;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.patient-refresh-btn:disabled {
+  background: #9ca3af;
+  cursor: default;
+}
+.patient-refresh-btn:not(:disabled):hover {
+  background: #1d4ed8;
+}
+.patient-error-banner {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 500;
+}
+.patient-loading {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #4b5563;
+  font-weight: 500;
+}
+.patient-table-wrap {
+  overflow-x: auto;
+}
+.patient-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+}
+.patient-table th, .patient-table td {
+  padding: 1rem 0.7rem;
+  text-align: left;
+  vertical-align: middle;
+}
+.patient-table th {
+  color: #888;
+  font-weight: 600;
+  font-size: 1rem;
+  background: none;
+}
+.patient-table tr:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0;
+}
+.patient-avatar {
+  display: inline-block;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #6c63ff;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-align: center;
+  line-height: 38px;
+  margin-right: 0.7rem;
+}
+.patient-info {
+  display: inline-block;
+  vertical-align: top;
+}
+.patient-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+.patient-id {
+  color: #888;
+  font-size: 0.95rem;
+}
+.patient-badge {
+  display: inline-block;
+  padding: 0.3rem 0.9rem;
+  border-radius: 12px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  color: #fff;
+}
+.badge-red { background: #f87171; }
+.badge-purple { background: #a78bfa; }
+.badge-blue { background: #60a5fa; }
+.badge-green { background: #4ade80; }
+.badge-gray { background: #a3a3a3; color: #222; }
+.patient-action-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+  margin-right: 0.3rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.patient-action-btn:hover {
+  background: #e0e7ef;
+}

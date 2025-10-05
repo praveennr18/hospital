@@ -36,11 +36,17 @@ class RegisterUserSerializer(serializers.Serializer):
         )
         
         # Send credentials email
-        send_credentials_email(user.email, password, user.role)
+        email_sent = send_credentials_email(
+            user.email,
+            password,
+            user.role,
+            user.first_name or user.get_full_name()
+        )
         
         return {
             'user': user,
-            'password': password  # Return for admin to see (optional)
+            'password': password,  # Return for admin to see (optional)
+            'email_sent': email_sent,
         }
 
 class LoginSerializer(serializers.Serializer):

@@ -1,11 +1,37 @@
 from django.contrib import admin
+from django import forms
 from .models import PatientProfile, MedicalHistory
+
+
+class PatientProfileAdminForm(forms.ModelForm):
+    """Custom admin form to provide dropdowns for key fields."""
+
+    class Meta:
+        model = PatientProfile
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        gender_choices = [('', 'Select Gender')] + list(PatientProfile.GENDER_CHOICES)
+        blood_group_choices = [('', 'Select Blood Group')] + list(PatientProfile.BLOOD_TYPE_CHOICES)
+        relationship_choices = [('', 'Select Relationship')] + list(PatientProfile.RELATIONSHIP_CHOICES)
+
+        self.fields['gender'].choices = gender_choices
+        self.fields['gender'].widget = forms.Select(choices=gender_choices)
+
+        self.fields['blood_group'].choices = blood_group_choices
+        self.fields['blood_group'].widget = forms.Select(choices=blood_group_choices)
+
+        self.fields['relationship'].choices = relationship_choices
+        self.fields['relationship'].widget = forms.Select(choices=relationship_choices)
 
 
 @admin.register(PatientProfile)
 class PatientProfileAdmin(admin.ModelAdmin):
     """Admin configuration for PatientProfile model."""
     
+    form = PatientProfileAdminForm
     list_display = ('get_full_name', 'get_email', 'blood_group', 'age', 'created_at')
     list_filter = ('blood_group', 'created_at')
     search_fields = ('user__first_name', 'user__last_name', 'user__email')

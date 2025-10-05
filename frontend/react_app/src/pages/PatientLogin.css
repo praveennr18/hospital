@@ -1,0 +1,353 @@
+:root {
+  --login-bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --login-card-bg: #f8f9fe;
+  --login-primary: #6366f1;
+  --login-primary-hover: #4f46e5;
+  --login-text: #1f2937;
+  --login-muted: #6b7280;
+  --login-border: #e5e7eb;
+  --login-shadow: 0 20px 45px -20px rgba(99, 102, 241, 0.4);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+}
+
+body {
+  font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ———————————————————— Root Container ———————————————————— */
+.unified-login-root {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  background: var(--login-bg-gradient);
+  background-attachment: fixed;
+  position: relative;
+  margin: 0;
+}
+
+.unified-login-root::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ———————————————————— Login Card ———————————————————— */
+.unified-login-card {
+  width: min(100%, 460px);
+  background: var(--login-card-bg);
+  border-radius: 24px;
+  padding: 2.5rem 2.2rem 2.2rem;
+  box-shadow: var(--login-shadow);
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* ———————————————————— Logo & Branding ———————————————————— */
+.unified-logo-section {
+  text-align: center;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.unified-logo-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 0.4rem;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  box-shadow: 0 8px 16px -8px rgba(108, 78, 254, 0.5);
+}
+
+.unified-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.unified-brand {
+  font-size: 1.95rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--login-primary);
+  letter-spacing: -0.02em;
+}
+
+.unified-tagline {
+  font-size: 0.98rem;
+  color: var(--login-muted);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ———————————————————— Section Title ———————————————————— */
+.unified-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--login-text);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ———————————————————— Role Tabs ———————————————————— */
+.unified-role-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  background: #fff;
+  padding: 0.4rem;
+  border-radius: 14px;
+  border: 1px solid var(--login-border);
+}
+
+.unified-role-tab {
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  padding: 0.7rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--login-muted);
+}
+
+.unified-role-tab:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.unified-role-tab.active {
+  background: linear-gradient(135deg, var(--login-primary) 0%, #8b5cf6 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px -6px rgba(99, 102, 241, 0.6);
+}
+
+.unified-role-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.unified-role-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.unified-role-desc {
+  font-size: 0.88rem;
+  color: var(--login-muted);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ———————————————————— Form ———————————————————— */
+.unified-form {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 0.3rem;
+}
+
+.unified-form-group {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.unified-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--login-text);
+}
+
+.unified-input-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.unified-input {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--login-border);
+  padding: 0.8rem 1rem;
+  font-size: 0.98rem;
+  color: var(--login-text);
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.unified-input:focus {
+  outline: none;
+  border-color: var(--login-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.unified-input::placeholder {
+  color: #9ca3af;
+}
+
+/* ———————————————————— Error Message ———————————————————— */
+.unified-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  color: #dc2626;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* ———————————————————— Submit Button ———————————————————— */
+.unified-submit-btn {
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--login-primary) 0%, #8b5cf6 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.02rem;
+  padding: 0.9rem 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 0.3rem;
+}
+
+.unified-submit-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px -12px rgba(99, 102, 241, 0.6);
+}
+
+.unified-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ———————————————————— Forgot Password ———————————————————— */
+.unified-forgot {
+  text-align: center;
+  font-size: 0.92rem;
+}
+
+.unified-forgot a {
+  color: var(--login-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.unified-forgot a:hover {
+  color: var(--login-primary-hover);
+  text-decoration: underline;
+}
+
+/* ———————————————————— Footer Notes ———————————————————— */
+.unified-note {
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.unified-note.patient-note {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #1e40af;
+}
+
+.unified-note.doctor-note {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #047857;
+}
+
+.unified-note strong {
+  font-weight: 600;
+}
+
+/* ———————————————————— Responsive ———————————————————— */
+@media (max-width: 520px) {
+  .unified-login-root {
+    padding: 1.5rem 1rem;
+  }
+
+  .unified-login-card {
+    padding: 2rem 1.5rem 1.8rem;
+    gap: 1.2rem;
+  }
+
+  .unified-logo-icon {
+    width: 56px;
+    height: 56px;
+    font-size: 1.8rem;
+  }
+
+  .unified-brand {
+    font-size: 1.7rem;
+  }
+
+  .unified-tagline {
+    font-size: 0.9rem;
+  }
+
+  .unified-role-tabs {
+    gap: 0.4rem;
+  }
+
+  .unified-role-tab {
+    padding: 0.6rem 0.4rem;
+  }
+
+  .unified-role-icon {
+    font-size: 1.3rem;
+  }
+
+  .unified-role-label {
+    font-size: 0.82rem;
+  }
+
+  .unified-note {
+    font-size: 0.84rem;
+    padding: 0.8rem 0.9rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .unified-role-label {
+    font-size: 0.78rem;
+  }
+
+  .unified-role-icon {
+    font-size: 1.2rem;
+  }
+}

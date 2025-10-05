@@ -18,14 +18,15 @@ class APILoggingMiddleware(MiddlewareMixin):
         # Calculate request duration
         duration = time.time() - getattr(request, 'start_time', time.time())
         
-        # Get user information
+        # Get user information with role
         user_info = 'Anonymous'
         if hasattr(request, 'user') and request.user.is_authenticated:
-            user_info = request.user.email
+            user_role = getattr(request.user, 'role', 'unknown')
+            user_info = f"{request.user.email} ({user_role})"
         
         # Log only API requests (those starting with /api/)
         if request.path.startswith('/api/'):
-            # Simple log format
+            # Simple log format with user role
             log_message = f"{request.method} {request.path} - Status: {response.status_code} - User: {user_info} - Duration: {duration*1000:.0f}ms"
             
             # Log based on status code

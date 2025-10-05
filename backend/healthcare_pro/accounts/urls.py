@@ -25,5 +25,7 @@ urlpatterns = [
     # Admin endpoints - Dashboard & Management
     path('admin/dashboard/stats/', admin_views.admin_dashboard_stats, name='admin_dashboard_stats'),
     path('admin/doctors/list/', admin_views.admin_doctors_list, name='admin_doctors_list'),
+    path('admin/doctors/<str:doctor_id>/', admin_views.admin_doctor_detail, name='admin_doctor_detail'),
     path('admin/patients/list/', admin_views.admin_patients_list, name='admin_patients_list'),
+    path('admin/patients/<int:patient_id>/', admin_views.admin_patient_detail, name='admin_patient_detail'),
 ]
