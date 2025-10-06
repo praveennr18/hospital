@@ -1,0 +1,115 @@
+======================================================================
+Healthcare Pro - Admin Module Test Results
+======================================================================
+
+Test Execution Date: 2025-10-05 14:05:06
+Test User: praveennr6361@gmail.com
+Module: Admin
+
+======================================================================
+TEST SUMMARY
+======================================================================
+
+Total Tests:  15
+Passed:       15
+Failed:       0
+Success Rate: 100.0%
+Duration:     73.11 seconds
+
+======================================================================
+DETAILED TEST RESULTS
+======================================================================
+
+Test 1: Navigate to Login Page
+Status: PASS
+Time: 2025-10-05 14:04:22
+Message: Successfully navigated to http://localhost:5173/login
+----------------------------------------------------------------------
+
+Test 2: Select Admin Role Tab
+Status: PASS
+Time: 2025-10-05 14:04:31
+Message: Admin role tab selected successfully
+----------------------------------------------------------------------
+
+Test 3: Login as Admin
+Status: PASS
+Time: 2025-10-05 14:04:39
+Message: Successfully logged in as praveennr6361@gmail.com
+----------------------------------------------------------------------
+
+Test 4: Verify Admin Dashboard Loaded
+Status: PASS
+Time: 2025-10-05 14:04:41
+Message: Admin dashboard loaded successfully
+----------------------------------------------------------------------
+
+Test 5: Check Dashboard Statistics
+Status: PASS
+Time: 2025-10-05 14:04:41
+Message: Dashboard statistics displayed correctly
+----------------------------------------------------------------------
+
+Test 6: Navigate to Doctors Management
+Status: PASS
+Time: 2025-10-05 14:04:44
+Message: Doctors management section accessed
+----------------------------------------------------------------------
+
+Test 7: View Doctors List
+Status: PASS
+Time: 2025-10-05 14:04:47
+Message: Doctors list found with 3 potential records
+----------------------------------------------------------------------
+
+Test 8: Navigate to Patients Management
+Status: PASS
+Time: 2025-10-05 14:04:53
+Message: Patients management section accessed
+----------------------------------------------------------------------
+
+Test 9: View Patients List
+Status: PASS
+Time: 2025-10-05 14:04:55
+Message: Patients list found with 4 potential records
+----------------------------------------------------------------------
+
+Test 10: Navigate to Appointments Management
+Status: PASS
+Time: 2025-10-05 14:04:58
+Message: Appointments management section accessed
+----------------------------------------------------------------------
+
+Test 11: View Appointments List
+Status: PASS
+Time: 2025-10-05 14:05:00
+Message: Appointments list found with 4 potential records
+----------------------------------------------------------------------
+
+Test 12: Check Register Doctor Option
+Status: PASS
+Time: 2025-10-05 14:05:00
+Message: Register Doctor option found
+----------------------------------------------------------------------
+
+Test 13: Check Register Patient Option
+Status: PASS
+Time: 2025-10-05 14:05:00
+Message: Register Patient option found
+----------------------------------------------------------------------
+
+Test 14: Navigate Back to Dashboard
+Status: PASS
+Time: 2025-10-05 14:05:03
+Message: Navigated back to dashboard
+----------------------------------------------------------------------
+
+Test 15: Logout from Admin Account
+Status: PASS
+Time: 2025-10-05 14:05:06
+Message: Successfully logged out
+----------------------------------------------------------------------
+
+======================================================================
+END OF REPORT
+======================================================================

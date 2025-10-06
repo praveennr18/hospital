@@ -1,0 +1,115 @@
+======================================================================
+Healthcare Pro - Doctor Module Test Results
+======================================================================
+
+Test Execution Date: 2025-10-05 13:47:07
+Test User: praveennr03@gmail.com
+Module: Doctor
+
+======================================================================
+TEST SUMMARY
+======================================================================
+
+Total Tests:  15
+Passed:       15
+Failed:       0
+Success Rate: 100.0%
+Duration:     49.13 seconds
+
+======================================================================
+DETAILED TEST RESULTS
+======================================================================
+
+Test 1: Navigate to Login Page
+Status: PASS
+Time: 2025-10-05 13:46:27
+Message: Successfully navigated to http://localhost:5173/login
+----------------------------------------------------------------------
+
+Test 2: Select Doctor Role Tab
+Status: PASS
+Time: 2025-10-05 13:46:29
+Message: Doctor role tab selected successfully
+----------------------------------------------------------------------
+
+Test 3: Login as Doctor
+Status: PASS
+Time: 2025-10-05 13:46:35
+Message: Successfully logged in as praveennr03@gmail.com
+----------------------------------------------------------------------
+
+Test 4: Verify Doctor Dashboard Loaded
+Status: PASS
+Time: 2025-10-05 13:46:38
+Message: Doctor dashboard loaded successfully
+----------------------------------------------------------------------
+
+Test 5: Check Doctor Information Display
+Status: PASS
+Time: 2025-10-05 13:46:38
+Message: Doctor information displayed correctly
+----------------------------------------------------------------------
+
+Test 6: View Today's Schedule
+Status: PASS
+Time: 2025-10-05 13:46:44
+Message: Today's schedule section found with 0 potential appointments
+----------------------------------------------------------------------
+
+Test 7: Navigate to Appointments Section
+Status: PASS
+Time: 2025-10-05 13:46:47
+Message: Appointments section accessed
+----------------------------------------------------------------------
+
+Test 8: View All Appointments
+Status: PASS
+Time: 2025-10-05 13:46:48
+Message: Appointments list found with 2 potential records
+----------------------------------------------------------------------
+
+Test 9: Navigate to Patients Section
+Status: PASS
+Time: 2025-10-05 13:46:51
+Message: Patients section accessed
+----------------------------------------------------------------------
+
+Test 10: View Patient List
+Status: PASS
+Time: 2025-10-05 13:46:53
+Message: Patient list found with 2 potential records
+----------------------------------------------------------------------
+
+Test 11: Navigate to Availability Settings
+Status: PASS
+Time: 2025-10-05 13:46:56
+Message: Availability settings accessed
+----------------------------------------------------------------------
+
+Test 12: View Availability Settings
+Status: PASS
+Time: 2025-10-05 13:46:59
+Message: Availability settings section found
+----------------------------------------------------------------------
+
+Test 13: Check Schedule Appointment Button
+Status: PASS
+Time: 2025-10-05 13:47:00
+Message: Appointment scheduling functionality available
+----------------------------------------------------------------------
+
+Test 14: Navigate Back to Dashboard
+Status: PASS
+Time: 2025-10-05 13:47:03
+Message: Navigated back to dashboard
+----------------------------------------------------------------------
+
+Test 15: Logout from Doctor Account
+Status: PASS
+Time: 2025-10-05 13:47:07
+Message: Successfully logged out
+----------------------------------------------------------------------
+
+======================================================================
+END OF REPORT
+======================================================================
