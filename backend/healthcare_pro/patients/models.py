@@ -23,6 +23,16 @@ class PatientProfile(models.Model):
         ('O', 'Other'),
     ]
     
+    RELATIONSHIP_CHOICES = [
+        ('parent', 'Parent'),
+        ('spouse', 'Spouse'),
+        ('sibling', 'Sibling'),
+        ('child', 'Child'),
+        ('guardian', 'Guardian'),
+        ('friend', 'Friend'),
+        ('other', 'Other'),
+    ]
+    
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='patient_profile')
     
     # Personal Information
@@ -47,7 +57,7 @@ class PatientProfile(models.Model):
     # Emergency Contact
     emergency_contact_name = models.CharField(max_length=100, blank=True, null=True)
     emergency_contact_phone = models.CharField(max_length=15, blank=True, null=True)
-    relationship = models.CharField(max_length=50, blank=True, null=True)
+    relationship = models.CharField(max_length=50, choices=RELATIONSHIP_CHOICES, blank=True, null=True)
     
     # Insurance Information
     insurance_provider = models.CharField(max_length=100, blank=True, null=True)

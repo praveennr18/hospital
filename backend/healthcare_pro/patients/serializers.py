@@ -50,10 +50,10 @@ class PatientProfileUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
         fields = [
-            'phone_number', 'date_of_birth', 'gender', 'address', 'blood_type', 
-            'height', 'weight', 'allergies', 'chronic_conditions', 'current_medications',
-            'emergency_contact_name', 'emergency_contact_phone', 'emergency_contact_relationship', 
-            'insurance_provider', 'insurance_policy_number'
+            'phone_number', 'date_of_birth', 'gender', 'address', 'city', 'state', 'zip_code',
+            'blood_group', 'height', 'weight', 'allergies', 'chronic_conditions', 'current_medications',
+            'emergency_contact_name', 'emergency_contact_phone', 'relationship', 
+            'insurance_provider', 'policy_number'
         ]
 
 
@@ -68,7 +68,7 @@ class PatientProfileListSerializer(serializers.ModelSerializer):
         model = PatientProfile
         fields = [
             'id', 'user', 'full_name', 'phone_number', 'age', 'gender', 
-            'blood_type', 'created_at'
+            'blood_group', 'created_at'
         ]
     
     def get_full_name(self, obj):

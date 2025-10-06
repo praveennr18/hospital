@@ -1,0 +1,249 @@
+/* Main layout */
+.doc-pat-main {
+  width: 100%;
+  padding: 40px 48px 32px 48px;
+  box-sizing: border-box;
+}
+
+.doc-pat-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.doc-pat-header-title {
+  font-size: 2.1rem;
+  font-weight: bold;
+  color: #222;
+}
+.doc-pat-header-desc {
+  color: #6c757d;
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+
+.doc-pat-refresh {
+  background: #edf2ff;
+  color: #3b5bdb;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+.doc-pat-refresh:hover:not(:disabled) {
+  background: #dbe4ff;
+}
+.doc-pat-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.doc-pat-error {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fff5f5;
+  color: #c92a2a;
+  border: 1px solid #ffa8a8;
+}
+
+.doc-pat-directory-card {
+  background: linear-gradient(135deg,#f5f7ff 0%,#f7f8fa 100%);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 #0001;
+  padding: 24px 0 0 0;
+}
+.doc-pat-directory-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #3b5bdb;
+  margin-left: 32px;
+  margin-top: 12px;
+}
+.doc-pat-directory-desc {
+  color: #6c757d;
+  font-size: 1rem;
+  margin-left: 32px;
+  margin-bottom: 12px;
+}
+
+.doc-pat-search-row {
+  margin: 0 32px 18px 32px;
+  display: flex;
+  gap: 12px;
+}
+.doc-pat-search {
+  flex: 1;
+  border: none;
+  background: #f7f8fa;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  outline: none;
+}
+.doc-pat-filter {
+  min-width: 180px;
+  border: none;
+  background: #f7f8fa;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 1rem;
+  outline: none;
+}
+
+.doc-pat-table-wrap {
+  overflow-x: auto;
+  padding: 0 32px 24px 32px;
+}
+.doc-pat-loading {
+  padding: 48px 0;
+  text-align: center;
+  color: #6c757d;
+  font-size: 1.05rem;
+}
+.doc-pat-empty {
+  padding: 48px 0;
+  text-align: center;
+  color: #6c757d;
+}
+.doc-pat-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 1rem;
+  background: transparent;
+}
+.doc-pat-table th, .doc-pat-table td {
+  padding: 14px 12px;
+  text-align: left;
+  background: transparent;
+}
+.doc-pat-table th {
+  color: #888;
+  font-weight: 600;
+  font-size: 1.01rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+.doc-pat-table td {
+  color: #222;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.doc-pat-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-right: 10px;
+  vertical-align: middle;
+  background: linear-gradient(135deg,#a259ff 0%,#3b5bdb 100%);
+}
+.doc-pat-name {
+  font-weight: 600;
+  margin-right: 6px;
+}
+.doc-pat-id {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+.doc-pat-blood-pill {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 12px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  background: #f1f3f5;
+  color: #555;
+  text-transform: uppercase;
+}
+.blood-ap {
+  background: #ffe3e3;
+  color: #e03131;
+}
+.blood-an {
+  background: #ffe3e3;
+  color: #c92a2a;
+}
+.blood-on {
+  background: #e6f9e8;
+  color: #2b8a3e;
+}
+.blood-bp {
+  background: #e3eaff;
+  color: #3b5bdb;
+}
+.blood-bn {
+  background: #e3eaff;
+  color: #364fc7;
+}
+.blood-abp {
+  background: #f0eaff;
+  color: #a259ff;
+}
+.blood-abn {
+  background: #f0eaff;
+  color: #7048e8;
+}
+.blood-op {
+  background: #e6f9e8;
+  color: #2b8a3e;
+}
+
+.doc-pat-contact {
+  color: #888;
+  font-size: 0.98rem;
+}
+.doc-pat-email {
+  color: #888;
+  font-size: 0.98rem;
+}
+
+.doc-pat-action-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 0.97rem;
+  font-weight: 500;
+  background: #f7f8fa;
+  color: #3b5bdb;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.doc-pat-action-btn:hover {
+  background: #e6edff;
+}
+.doc-pat-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 32px 24px 32px;
+  color: #495057;
+}
+.doc-pat-page-btn {
+  background: #f7f8fa;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #3b5bdb;
+  transition: background 0.18s ease;
+}
+.doc-pat-page-btn:hover:not(:disabled) {
+  background: #e6edff;
+}
+.doc-pat-page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

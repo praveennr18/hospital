@@ -1,87 +1,164 @@
 import React, { useState } from 'react';
 import './PatientLogin.css';
+import { useNavigate } from 'react-router-dom';
+import { authAPI, saveAuthData } from '../services/api.js';
+import healthcareLogo from '../assets/healthcare-logo.svg';
 
 const roles = [
-  { label: 'Patient', description: 'Patient Portal - View your medical information and appointments' },
-  { label: 'Doctor', description: 'Doctor Portal - Manage appointments and patient records' },
-  { label: 'Admin', description: 'Admin Portal - Manage users and system settings' },
+  { 
+    label: 'Patient', 
+    icon: '👤',
+    description: 'Patient Portal - View your medical information and appointments',
+    note: 'New Patient? Contact your healthcare provider or visit the front desk to get registered by an administrator.'
+  },
+  { 
+    label: 'Doctor', 
+    icon: '🩺',
+    description: 'Medical Professional - Manage patient care and schedules',
+    note: 'Doctor Access: Your account is managed by the system administrator. Contact IT support if you need assistance.'
+  },
+  { 
+    label: 'Admin', 
+    icon: '⚙️',
+    description: 'Administrator - Manage doctors, patients, and system settings',
+    note: null
+  },
 ];
-
-import { useNavigate } from 'react-router-dom';
 
 export default function PatientLogin({ onLogin, setAdminLoggedIn }) {
   const [selectedRole, setSelectedRole] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (roles[selectedRole].label === 'Admin') {
-      // Simple admin check: email: admin@admin.com, password: admin123
-      if (email === 'admin@admin.com' && password === 'admin123') {
-        if (setAdminLoggedIn) setAdminLoggedIn(true);
-        navigate('/admin');
+    setError('');
+    setLoading(true);
+
+    const selectedRoleLabel = roles[selectedRole].label.toLowerCase();
+    
+    try {
+      const response = await authAPI.login(email, password, selectedRoleLabel);
+      
+      if (response.success) {
+        saveAuthData(response.data);
+
+        const normalizedRole = response.data?.user?.role?.toLowerCase() || selectedRoleLabel;
+        localStorage.setItem('userRole', normalizedRole);
+        localStorage.setItem('userEmail', email);
+
+        // Navigate based on role and set app states
+        if (normalizedRole === 'admin') {
+          if (setAdminLoggedIn) setAdminLoggedIn(true);
+          navigate('/admin');
+        } else if (normalizedRole === 'doctor') {
+          if (onLogin) onLogin('Doctor');
+          navigate('/doctor');
+        } else {
+          if (onLogin) onLogin('Patient');
+          navigate('/');
+        }
       } else {
-        setError('Invalid admin credentials');
+        setError(response.error || 'Invalid credentials');
       }
-      return;
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Login failed. Please check your credentials and try again.');
+    } finally {
+      setLoading(false);
     }
-    if (onLogin) onLogin();
   };
+
+  const currentRole = roles[selectedRole];
+
   return (
-    <div className="login-background">
-      <div className="login-card">
-        <div className="login-logo-box">
-          <div className="login-logo"><span>\u23AF</span></div>
+    <div className="unified-login-root">
+      <div className="unified-login-card">
+        {/* Logo & Branding */}
+        <div className="unified-logo-section">
+          <div className="unified-logo-icon">
+            <img src={healthcareLogo} alt="HealthCare Pro" />
+          </div>
+          <h1 className="unified-brand">HealthCare Pro</h1>
+          <p className="unified-tagline">Smart Appointment & Patient Management System</p>
         </div>
-        <h2 className="login-title">HealthCare Pro</h2>
-        <p className="login-subtitle">Smart Appointment & Patient Management System</p>
-        <div className="login-role-tabs">
+
+        {/* Role Selection */}
+        <div className="unified-section-title">Select Your Role</div>
+        <div className="unified-role-tabs">
           {roles.map((role, idx) => (
             <button
               key={role.label}
-              className={idx === selectedRole ? 'login-active-tab' : 'login-tab'}
+              type="button"
+              className={`unified-role-tab ${idx === selectedRole ? 'active' : ''}`}
               onClick={() => setSelectedRole(idx)}
             >
-              {role.label}
+              <span className="unified-role-icon">{role.icon}</span>
+              <span className="unified-role-label">{role.label}</span>
             </button>
           ))}
         </div>
-        <div className="login-role-desc">{roles[selectedRole].description}</div>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <label className="login-label">
-            <span className="login-icon">&#128231;</span> Email Address
+        
+        <p className="unified-role-desc">{currentRole.description}</p>
+
+        {/* Login Form */}
+        <form className="unified-form" onSubmit={handleSubmit}>
+          <div className="unified-form-group">
+            <label className="unified-label">
+              <span className="unified-input-icon">✉️</span>
+              Email Address
+            </label>
             <input
-              className="login-input"
+              className="unified-input"
               type="email"
               placeholder="Enter your registered email"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
             />
-          </label>
-          <label className="login-label">
-            <span className="login-icon">&#128274;</span> Password
+          </div>
+
+          <div className="unified-form-group">
+            <label className="unified-label">
+              <span className="unified-input-icon">🔒</span>
+              Password
+            </label>
             <input
-              className="login-input"
+              className="unified-input"
               type="password"
               placeholder="Enter your password"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
             />
-          </label>
-          {error && <div style={{color:'#e11d48',textAlign:'center',marginBottom:'0.5rem'}}>{error}</div>}
-          <button className="login-signin-btn" type="submit">
-            Sign In as {roles[selectedRole].label}
+          </div>
+
+          {error && <div className="unified-error">{error}</div>}
+
+          <button className="unified-submit-btn" type="submit" disabled={loading}>
+            {loading ? 'Signing In...' : `Sign In as ${currentRole.label}`}
           </button>
         </form>
-        <div className="login-forgot"><a href="#">Forgot your password?</a></div>
-        <div className="login-new-patient">
-          New Patient? Contact your healthcare provider or visit the front desk to get registered by an administrator.
-        </div>
+
+        {/* Footer Links - Only for Doctor and Patient */}
+        {selectedRole !== 2 && (
+          <div className="unified-forgot">
+            <a href="/forgot-password">Forgot your password?</a>
+          </div>
+        )}
+
+        {currentRole.note && (
+          <div className={`unified-note ${currentRole.label === 'Doctor' ? 'doctor-note' : 'patient-note'}`}>
+            <strong>{currentRole.label === 'Doctor' ? 'Doctor Access:' : 'New Patient?'}</strong>{' '}
+            {currentRole.label === 'Doctor' 
+              ? 'Your account is managed by the system administrator. Contact IT support if you need assistance.'
+              : 'Contact your healthcare provider or visit the front desk to get registered by an administrator.'}
+          </div>
+        )}
       </div>
     </div>
   );

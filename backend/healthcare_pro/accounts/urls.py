@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework_simplejwt.views import TokenRefreshView
-from .views import auth_views, user_views, admin_views
+from .views import auth_views, user_views, admin_views, password_reset_views
 
 urlpatterns = [
     # Authentication endpoints
@@ -25,5 +25,12 @@ urlpatterns = [
     # Admin endpoints - Dashboard & Management
     path('admin/dashboard/stats/', admin_views.admin_dashboard_stats, name='admin_dashboard_stats'),
     path('admin/doctors/list/', admin_views.admin_doctors_list, name='admin_doctors_list'),
+    path('admin/doctors/<str:doctor_id>/', admin_views.admin_doctor_detail, name='admin_doctor_detail'),
     path('admin/patients/list/', admin_views.admin_patients_list, name='admin_patients_list'),
+    path('admin/patients/<int:patient_id>/', admin_views.admin_patient_detail, name='admin_patient_detail'),
+    
+    # Password Reset endpoints (for doctors and patients only)
+    path('password-reset/request/', password_reset_views.request_password_reset, name='request_password_reset'),
+    path('password-reset/verify-code/', password_reset_views.verify_reset_code, name='verify_reset_code'),
+    path('password-reset/reset/', password_reset_views.reset_password, name='reset_password'),
 ]

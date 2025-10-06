@@ -96,6 +96,23 @@ html, body, #root {
 }
 .admin-header {
   margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.admin-schedule-btn {
+  background: #6c63ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.admin-schedule-btn:hover {
+  background: #5951e6;
 }
 .admin-header h2 {
   font-size: 2rem;
@@ -141,11 +158,23 @@ html, body, #root {
   box-shadow: 0 2px 8px #0001;
   padding: 2rem 2.5rem;
 }
+.admin-schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
 .admin-schedule-title {
   font-size: 1.2rem;
   font-weight: 500;
   color: #6c63ff;
-  margin-bottom: 0.2rem;
+}
+.admin-schedule-date {
+  color: #555;
+  font-size: 1rem;
+  font-weight: 500;
 }
 .admin-schedule-desc {
   color: #888;
@@ -199,4 +228,35 @@ html, body, #root {
   border-radius: 6px;
   padding: 0.3rem 0.8rem;
   margin-left: auto;
+}
+.admin-schedule-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 2.2rem 1.5rem;
+  background: #f6f8ff;
+  border: 1px dashed #d9ddff;
+  border-radius: 12px;
+  text-align: center;
+  color: #556;
+}
+.admin-schedule-empty p {
+  margin: 0;
+  font-size: 1rem;
+}
+.admin-empty-action-btn {
+  background: #6c63ff;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.admin-empty-action-btn:hover {
+  background: #5951e6;
 }

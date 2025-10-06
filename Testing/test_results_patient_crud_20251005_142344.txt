@@ -1,0 +1,113 @@
+======================================================================
+Healthcare Pro - Patient CRUD Operations Test Results
+======================================================================
+
+Test Execution Date: 2025-10-05 14:23:44
+Test User: skandaudemy@gmail.com
+Module: Patient CRUD Operations
+
+Test Data Used:
+- Medical History: Test Condition 4842
+- Allergy: Test Allergen 5145
+- Medication: Test Medicine 8568 - 10mg twice daily
+
+======================================================================
+TEST SUMMARY
+======================================================================
+
+Total Tests:  10
+Passed:       5
+Failed:       5
+Success Rate: 50.0%
+Duration:     61.92 seconds
+
+======================================================================
+DETAILED TEST RESULTS
+======================================================================
+
+Test 1: Add Medical History (CREATE)
+Status: FAIL
+Time: 2025-10-05 14:23:15
+Message: Error: Message: 
+Stacktrace:
+	GetHandleVerifier [0x0x7ff792481eb5+80197]
+	GetHandleVerifier [0x0x7ff792481f10+80288]
+	(No symbol) [0x0x7ff7922002fa]
+	(No symbol) [0x0x7ff792257cd7]
+	(No symbol) [0x0x7ff792257f9c]
+	(No symbol) [0x0x7ff7922aba87]
+	(No symbol) [0x0x7ff7922803bf]
+	(No symbol) [0x0x7ff7922a87fb]
+	(No symbol) [0x0x7ff792280153]
+	(No symbol) [0x0x7ff792248b02]
+	(No symbol) [0x0x7ff7922498d3]
+	GetHandleVerifier [0x0x7ff79273e83d+2949837]
+	GetHandleVerifier [0x0x7ff792738c6a+2926330]
+	GetHandleVerifier [0x0x7ff7927586c7+3055959]
+	GetHandleVerifier [0x0x7ff79249cfee+191102]
+	GetHandleVerifier [0x0x7ff7924a50af+224063]
+	GetHandleVerifier [0x0x7ff79248af64+117236]
+	GetHandleVerifier [0x0x7ff79248b119+117673]
+	GetHandleVerifier [0x0x7ff7924710a8+11064]
+	BaseThreadInitThunk [0x0x7fff02fe7374+20]
+	RtlUserThreadStart [0x0x7fff048fcc91+33]
+
+----------------------------------------------------------------------
+
+Test 2: Verify Medical History (READ)
+Status: FAIL
+Time: 2025-10-05 14:23:17
+Message: Medical history not found in list
+----------------------------------------------------------------------
+
+Test 3: Add Allergy (CREATE)
+Status: PASS
+Time: 2025-10-05 14:23:22
+Message: Added: Test Allergen 5145
+----------------------------------------------------------------------
+
+Test 4: Verify Allergy (READ)
+Status: FAIL
+Time: 2025-10-05 14:23:23
+Message: Allergy not found in list
+----------------------------------------------------------------------
+
+Test 5: Add Medication (CREATE)
+Status: PASS
+Time: 2025-10-05 14:23:32
+Message: Added: Test Medicine 8568
+----------------------------------------------------------------------
+
+Test 6: Verify Medication (READ)
+Status: FAIL
+Time: 2025-10-05 14:23:33
+Message: Medication not found in list
+----------------------------------------------------------------------
+
+Test 7: Navigate to Appointments Page
+Status: PASS
+Time: 2025-10-05 14:23:37
+Message: Navigated to appointments page
+----------------------------------------------------------------------
+
+Test 8: View Appointments List (READ)
+Status: PASS
+Time: 2025-10-05 14:23:39
+Message: Appointments loaded from database: 3 records found
+----------------------------------------------------------------------
+
+Test 9: Database Persistence Check
+Status: FAIL
+Time: 2025-10-05 14:23:44
+Message: Data not found after refresh
+----------------------------------------------------------------------
+
+Test 10: Logout
+Status: PASS
+Time: 2025-10-05 14:23:44
+Message: Successfully logged out
+----------------------------------------------------------------------
+
+======================================================================
+END OF REPORT
+======================================================================

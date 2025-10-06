@@ -1,0 +1,823 @@
+/* Appointments Tab Layout */
+.pdash-appt-tab {
+  margin-top: 1.2rem;
+}
+.pdash-appt-header-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+.pdash-appt-header-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-right: 1.5rem;
+}
+.pdash-appt-header-desc {
+  color: #888;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+.pdash-appt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.pdash-appt-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
+  display: flex;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  gap: 1.2rem;
+  border-left: 4px solid #7f5fff;
+  margin-bottom: 0.2rem;
+}
+.pdash-appt-icon {
+  background: linear-gradient(135deg, #7f5fff 0%, #5ae6ff 100%);
+  color: #fff;
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+.pdash-appt-info {
+  flex: 1;
+}
+.pdash-appt-doctor {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.pdash-appt-dept {
+  color: #4b3aff;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+.pdash-appt-datetime {
+  color: #888;
+  font-size: 0.98rem;
+}
+.pdash-appt-status {
+  padding: 0.4rem 1.2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  background: #eafaf1;
+  color: #1dbf73;
+  margin-left: 1rem;
+  min-width: 100px;
+  text-align: center;
+}
+.pdash-appt-status.consultation {
+  background: #eafaf1;
+  color: #1dbf73;
+}
+.pdash-appt-status.followup {
+  background: #e3e7ff;
+  color: #4b3aff;
+}
+.pdash-appt-status.checkup {
+  background: #fff4cf;
+  color: #d48806;
+}
+.pdash-appt-status.emergency {
+  background: #ffe5e5;
+  color: #d32f2f;
+}
+.pdash-appt-status.procedure {
+  background: #eef2ff;
+  color: #4338ca;
+}
+.pdash-appt-status.therapy {
+  background: #f4f9ff;
+  color: #1d4ed8;
+}
+.pdash-appt-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-left: auto;
+}
+.pdash-appt-meta {
+  color: #667085;
+  font-size: 0.92rem;
+  margin-top: 0.35rem;
+}
+.pdash-appt-status-text {
+  font-weight: 500;
+}
+
+.pdash-error-banner {
+  background: #fff5f5;
+  border: 1.5px solid #f5c2c7;
+  color: #c62828;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.pdash-feedback {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.pdash-feedback.success {
+  background: #f0fff7;
+  border: 1.5px solid #b4f1ce;
+  color: #1b7f4b;
+}
+.pdash-feedback.error {
+  background: #fff5f4;
+  border: 1.5px solid #f5c2c7;
+  color: #c62828;
+}
+
+.pdash-loading,
+.pdash-loading-inline {
+  color: #667085;
+  text-align: center;
+  font-size: 1rem;
+}
+.pdash-loading {
+  padding: 2rem 1rem;
+}
+.pdash-loading-inline {
+  padding: 0.75rem 0;
+}
+
+.pdash-empty-state {
+  border: 1.5px dashed #d0d5dd;
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  color: #667085;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.pdash-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+.pdash-input-row .pdash-input {
+  margin-bottom: 0;
+}
+.pdash-input-row .pdash-add-btn {
+  margin: 0;
+}
+.pdash-add-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pdash-refresh-btn {
+  background: #ffffff;
+  border: 1.5px solid #cdd4ff;
+  color: #4b3aff;
+  border-radius: 8px;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.pdash-refresh-btn:hover {
+  background: #f4f5ff;
+}
+.pdash-refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+/* Add (+) Button for Medical History, Allergies, Medications */
+.pdash-add-btn {
+  background: #181828;
+  color: #fff;
+  border: none;
+  border-radius: 7px;
+  width: 2.2rem;
+  height: 2.2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pdash-add-btn:hover {
+  background: #4b3aff;
+}
+/* Medical History Tab Layout */
+.pdash-medical-row {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.2rem;
+}
+.pdash-medical-history {
+  border-left: 3px solid #1dbf73;
+  flex: 1.2;
+}
+.pdash-allergies {
+  border-left: 3px solid #e53935;
+  flex: 1;
+}
+.pdash-meds {
+  border-left: 3px solid #7f5fff;
+  flex: 1;
+}
+.pdash-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.pdash-card-title span[role="img"] {
+  font-size: 1.2rem;
+}
+.pdash-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1.5px solid #e3e7ff;
+  border-radius: 8px;
+  background: #f9f9ff;
+  font-size: 1rem;
+  margin-bottom: 0.7rem;
+  margin-top: 0.2rem;
+}
+.pdash-medical-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.pdash-medical-item {
+  background: #f8f9fb;
+  border-radius: 7px;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1rem;
+  border: 1.5px solid #e3e7ff;
+}
+.pdash-medical-list-green .pdash-medical-item {
+  background: #f4fff4;
+  border: 1.5px solid #1dbf73;
+}
+.pdash-medical-list-red .pdash-medical-item {
+  background: #fff4f4;
+  border: 1.5px solid #e53935;
+  color: #e53935;
+}
+.pdash-medical-list-purple .pdash-medical-item {
+  background: #f7f4ff;
+  border: 1.5px solid #7f5fff;
+  color: #7f5fff;
+}
+.pdash-trash {
+  margin-left: 0.7rem;
+  color: #888;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.pdash-trash:hover {
+  color: #e53935;
+}
+/* Pill Tab Bar */
+.pdash-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 1.5rem;
+  background: #f7f8fa;
+  border-radius: 20px;
+  padding: 0.2rem 0.2rem 0.2rem 0.2rem;
+  box-shadow: 0 1px 4px rgba(31,38,135,0.04);
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.pdash-tab {
+  background: none;
+  border: none;
+  color: #222;
+  font-size: 1.1rem;
+  padding: 0.7rem 2.5rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  font-weight: 500;
+}
+.pdash-tab.active {
+  background: #fff;
+  color: #4b3aff;
+  box-shadow: 0 2px 8px rgba(127, 95, 255, 0.07);
+  border: 2px solid #bfcaff;
+}
+.pdash-schedule-btn {
+  margin-left: auto;
+  background: #7f5fff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+.pdash-schedule-btn:hover {
+  background: #5a4fff;
+}
+.pdash-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
+  padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+  margin-bottom: 0.5rem;
+  border: 1.5px solid #e3e7ff;
+}
+.pdash-health-summary {
+  border-left: none;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
+  padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+  margin-bottom: 0.5rem;
+  border: 1.5px solid #e3e7ff;
+}
+.pdash-summary-row {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.2rem;
+  justify-content: flex-start;
+}
+.pdash-summary-box {
+  flex: 1;
+  border-radius: 12px;
+  padding: 1.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+  min-width: 200px;
+  box-shadow: none;
+}
+.pdash-summary-allergy {
+  background: #fff4f4;
+  color: #e53935;
+  border: none;
+}
+.pdash-summary-med {
+  background: #f4fff4;
+  color: #1dbf73;
+  border: none;
+}
+.pdash-summary-history {
+  background: #f4f8ff;
+  color: #2563eb;
+  border: none;
+}
+.pdash-summary-num {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.pdash-summary-allergy .pdash-summary-num {
+  color: #e53935;
+}
+.pdash-summary-med .pdash-summary-num {
+  color: #1dbf73;
+}
+.pdash-summary-history .pdash-summary-num {
+  color: #2563eb;
+}
+.pdash-summary-label {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+  text-align: center;
+  }
+.pdash-personal-info {
+  border-left: 4px solid #4b3aff;
+  position: relative;
+}
+.pdash-personal-info .pdash-card-title {
+  color: #4b3aff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pdash-personal-info .pdash-card-title:before {
+  content: '\1F464';
+  display: inline-block;
+  font-size: 1.3rem;
+  color: #4b3aff;
+  background: linear-gradient(135deg, #7f5fff 0%, #5ae6ff 100%);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.5rem;
+}
+.pdash-health-summary {
+  border-left: 4px solid #e3e7ff;
+}
+.pdash-summary-row {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+.pdash-summary-box {
+  flex: 1;
+  border-radius: 10px;
+  padding: 1.2rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.pdash-summary-allergy {
+  background: #fff4f4;
+  color: #e53935;
+  border: 1.5px solid #ffe0e0;
+}
+.pdash-summary-med {
+  background: #f4fff4;
+  color: #1dbf73;
+  border: 1.5px solid #d6f5e3;
+}
+.pdash-summary-num {
+  font-size: 2rem;
+  font-weight: 700;
+}
+.pdash-summary-label {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+}
+/* Overview Tab Layout */
+.pdash-overview-row {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.2rem;
+}
+.pdash-overview-left {
+  flex: 2;
+}
+.pdash-overview-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.pdash-card {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
+  padding: 1.5rem 1.5rem 1.2rem 1.5rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid #e3e7ff;
+}
+.pdash-personal-info {
+  border-left: 4px solid #4b3aff;
+}
+.pdash-health-summary {
+  border-left: 4px solid #e3e7ff;
+}
+.pdash-card-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pdash-card-desc {
+  color: #888;
+  font-size: 0.98rem;
+  margin-bottom: 1.1rem;
+}
+.pdash-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 2rem;
+  margin-bottom: 1.1rem;
+}
+.pdash-info-grid label {
+  font-size: 0.97rem;
+  color: #888;
+  margin-bottom: 0.2rem;
+}
+.pdash-info-grid input {
+  width: 100%;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
+  background: #f9f9ff;
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 0.2rem;
+}
+.pdash-info-section {
+  margin-bottom: 0.7rem;
+}
+.pdash-info-section label {
+  font-size: 0.97rem;
+  color: #888;
+  margin-bottom: 0.2rem;
+  display: block;
+}
+.pdash-info-section input {
+  width: 100%;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 7px;
+  background: #f9f9ff;
+  font-size: 1rem;
+  color: #222;
+}
+.pdash-info-note {
+  background: #f6faff;
+  color: #4b3aff;
+  border-radius: 7px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.97rem;
+  margin-bottom: 1rem;
+}
+.pdash-schedule-btn-wide {
+  width: 100%;
+  background: linear-gradient(90deg, #7f5fff 60%, #5ae6ff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.8rem 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+}
+.pdash-schedule-btn-wide:hover {
+  background: linear-gradient(90deg, #5a4fff 60%, #5ae6ff 100%);
+}
+.pdash-summary-row {
+  display: flex;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+.pdash-summary-box {
+  flex: 1;
+  border-radius: 10px;
+  padding: 1.2rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.pdash-summary-allergy {
+  background: #fff4f4;
+  color: #e53935;
+}
+.pdash-summary-med {
+  background: #f4fff4;
+  color: #1dbf73;
+}
+.pdash-summary-num {
+  font-size: 2rem;
+  font-weight: 700;
+}
+.pdash-summary-label {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 0.2rem;
+}
+/* Layout */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+.pdash-root {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background: #f8f9fb;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.pdash-sidebar {
+  width: 250px;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(31,38,135,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem 0 1rem 0;
+}
+.pdash-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #4b3aff;
+  margin-left: 2rem;
+  margin-bottom: 2rem;
+}
+.pdash-logo-icon {
+  background: linear-gradient(135deg, #7f5fff 0%, #5ae6ff 100%);
+  color: #fff;
+  border-radius: 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+.pdash-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-left: 2rem;
+}
+.pdash-nav-link {
+  color: #4b3aff;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+.pdash-nav-link.active, .pdash-nav-link:hover {
+  background: #eae6ff;
+  color: #7f5fff;
+}
+.pdash-sidebar-bottom {
+  margin-left: 2rem;
+}
+.pdash-user {
+  color: #888;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+.pdash-logout {
+  background: none;
+  border: none;
+  color: #f44336;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* Main Content */
+.pdash-main {
+  flex: 1;
+  padding: 2.5rem 3rem 2rem 3rem;
+}
+.pdash-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.pdash-header-desc {
+  color: #888;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+.pdash-tabs {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+.pdash-tab {
+  background: none;
+  border: none;
+  color: #222;
+  font-size: 1.1rem;
+  padding: 0.5rem 1.2rem;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.pdash-tab.active, .pdash-tab:hover {
+  background: #f3f3ff;
+  color: #4b3aff;
+}
+.pdash-schedule-btn {
+  margin-left: auto;
+  background: #7f5fff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pdash-schedule-btn:hover {
+  background: #5a4fff;
+}
+
+/* Appointments */
+.pdash-appts h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.pdash-appts-desc {
+  color: #888;
+  font-size: 1rem;
+  margin-bottom: 1.2rem;
+}
+.pdash-appt-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.pdash-appt-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(31,38,135,0.07);
+  display: flex;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  gap: 1.2rem;
+  border-left: 4px solid #7f5fff;
+}
+.pdash-appt-icon {
+  background: linear-gradient(135deg, #7f5fff 0%, #5ae6ff 100%);
+  color: #fff;
+  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+.pdash-appt-info {
+  flex: 1;
+}
+.pdash-appt-doctor {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+.pdash-appt-dept {
+  color: #4b3aff;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+.pdash-appt-datetime {
+  color: #888;
+  font-size: 0.98rem;
+}
+.pdash-appt-status {
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  font-size: 0.98rem;
+  font-weight: 500;
+  background: #eafaf1;
+  color: #1dbf73;
+  margin-left: 1rem;
+}
+.pdash-appt-status.consultation {
+  background: #eafaf1;
+  color: #1dbf73;
+}
+.pdash-appt-status.followup {
+  background: #e3e7ff;
+  color: #4b3aff;
+}

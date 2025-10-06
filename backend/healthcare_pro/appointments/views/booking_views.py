@@ -2,14 +2,116 @@ from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from django.db.models import Q
-from datetime import datetime, time, timedelta
+from django.db.models import Q, Count
+from datetime import datetime, timedelta, time as dt_time
 from django.utils import timezone
+from decouple import config
 
-from ..models import Appointment
+from ..models import Appointment, AppointmentSlot
 from ..serializers import AppointmentCreateSerializer, AppointmentSerializer
 from doctors.models import Doctor
 from patients.models import PatientProfile
+
+
+def _parse_time_value(value):
+    if value is None:
+        return None
+    if isinstance(value, dt_time):
+        return value
+    if isinstance(value, (int, float)):
+        # Assume integer hours represented (e.g., 9 -> 09:00)
+        try:
+            hours = int(value)
+            if 0 <= hours < 24:
+                return dt_time(hour=hours)
+        except (TypeError, ValueError):
+            return None
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if not cleaned:
+            return None
+        time_formats = ['%H:%M', '%H:%M:%S', '%I:%M %p', '%I %p']
+        for fmt in time_formats:
+            try:
+                return datetime.strptime(cleaned, fmt).time()
+            except ValueError:
+                continue
+    return None
+
+
+def _normalize_day_value(value):
+    if value is None:
+        return None
+    if isinstance(value, (list, tuple)) and value:
+        value = value[0]
+    return str(value).strip().lower() if str(value).strip() else None
+
+
+def _collect_working_day_windows(doctor, day_of_week):
+    working_days = doctor.working_days or []
+    if isinstance(working_days, dict):
+        working_days = [working_days]
+
+    windows = []
+    matched_day = False
+
+    def resolve_start_default():
+        return doctor.start_time or dt_time(9, 0)
+
+    def resolve_end_default():
+        return doctor.end_time or dt_time(19, 0)
+
+    for entry in working_days:
+        entry_day = None
+        start = None
+        end = None
+
+        if isinstance(entry, str):
+            entry_day = entry.strip().lower()
+        elif isinstance(entry, (list, tuple)) and entry:
+            entry_day = _normalize_day_value(entry[0])
+            if len(entry) > 1:
+                start = _parse_time_value(entry[1])
+            if len(entry) > 2:
+                end = _parse_time_value(entry[2])
+        elif isinstance(entry, dict):
+            entry_day = _normalize_day_value(
+                entry.get('day')
+                or entry.get('day_of_week')
+                or entry.get('weekday')
+                or entry.get('name')
+                or entry.get('value')
+            )
+            start = _parse_time_value(
+                entry.get('start_time')
+                or entry.get('start')
+                or entry.get('from')
+                or entry.get('opens_at')
+            )
+            end = _parse_time_value(
+                entry.get('end_time')
+                or entry.get('end')
+                or entry.get('to')
+                or entry.get('closes_at')
+            )
+
+        if entry_day == day_of_week:
+            matched_day = True
+            start = start or resolve_start_default()
+            end = end or resolve_end_default()
+            if start and end and start < end:
+                windows.append((start, end))
+
+    if matched_day and windows:
+        return windows
+
+    if matched_day and not windows:
+        start = resolve_start_default()
+        end = resolve_end_default()
+        if start and end and start < end:
+            return [(start, end)]
+
+    return []
 
 
 @api_view(['POST'])
@@ -17,22 +119,46 @@ from patients.models import PatientProfile
 def schedule_appointment(request):
     """
     Schedule a new appointment with enhanced booking functionality
+    Allows patients, doctors, and admins to schedule appointments
     """
-    if request.user.role != 'patient':
+    # Allow patients, doctors, and admins to schedule appointments
+    if request.user.role not in ['patient', 'doctor', 'admin']:
         return Response(
-            {'error': 'Only patients can schedule appointments'}, 
+            {'error': 'Only patients, doctors, and admins can schedule appointments'}, 
             status=status.HTTP_403_FORBIDDEN
         )
     
-    try:
-        patient = PatientProfile.objects.get(user=request.user)
-    except PatientProfile.DoesNotExist:
-        return Response(
-            {'error': 'Patient profile not found'}, 
-            status=status.HTTP_404_NOT_FOUND
-        )
-    
     data = request.data
+    
+    # If user is a patient, use their own profile
+    if request.user.role == 'patient':
+        try:
+            patient = PatientProfile.objects.get(user=request.user)
+            # For patients scheduling their own appointments, use their ID
+            if 'patient_id' not in data:
+                data = data.copy()
+                data['patient_id'] = patient.id
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient profile not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    else:
+        # For doctors and admins, patient_id must be provided
+        if 'patient_id' not in data:
+            return Response(
+                {'error': 'Patient ID is required when scheduling for another patient'}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Verify the patient exists
+        try:
+            patient = PatientProfile.objects.get(id=data['patient_id'])
+        except PatientProfile.DoesNotExist:
+            return Response(
+                {'error': 'Patient not found'}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
     
     # Validate required fields
     required_fields = ['department', 'appointment_date', 'preferred_time', 'appointment_type', 'reason']
@@ -156,34 +282,157 @@ def get_available_slots(request):
     try:
         doctor = Doctor.objects.get(id=doctor_id)
         appointment_date = datetime.strptime(date_str, '%Y-%m-%d').date()
-        
-        # Get all booked appointments for this doctor on this date
-        booked_appointments = Appointment.objects.filter(
-            doctor=doctor,
-            appointment_date=appointment_date,
-            status__in=['scheduled', 'confirmed']
-        ).values_list('appointment_time', flat=True)
-        
-        # Generate time slots (9 AM to 5 PM, 30-minute intervals)
-        start_time = time(9, 0)  # 9:00 AM
-        end_time = time(17, 0)   # 5:00 PM
-        slot_duration = timedelta(minutes=30)
-        
-        slots = []
-        current_time = datetime.combine(appointment_date, start_time)
-        end_datetime = datetime.combine(appointment_date, end_time)
-        
-        while current_time < end_datetime:
-            slot_time = current_time.time()
-            is_booked = slot_time in booked_appointments
-            
-            slots.append({
-                'time': slot_time.strftime('%H:%M'),
-                'status': 'booked' if is_booked else 'available'
+        day_of_week = appointment_date.strftime('%A').lower()
+
+        booked_counts = {
+            item['appointment_time'].strftime('%H:%M'): item['count']
+            for item in Appointment.objects.filter(
+                doctor=doctor,
+                appointment_date=appointment_date,
+                status__in=['scheduled', 'confirmed', 'in_progress']
+            )
+            .values('appointment_time')
+            .annotate(count=Count('id'))
+        }
+
+        configured_slots = list(
+            AppointmentSlot.objects.filter(
+                doctor=doctor,
+                date=appointment_date
+            ).order_by('start_time')
+        )
+        configured_map = {
+            slot.start_time.strftime('%H:%M'): slot
+            for slot in configured_slots
+        }
+
+        slot_duration_setting = config('APPOINTMENT_SLOT_DURATION_MINUTES', default=60, cast=int)
+        try:
+            slot_duration = timedelta(minutes=max(int(slot_duration_setting), 60))
+        except (TypeError, ValueError):
+            slot_duration = timedelta(minutes=60)
+
+        now_local = timezone.localtime()
+        current_time_today = now_local.time() if now_local.date() == appointment_date else None
+
+        slot_data = []
+        processed_keys = set()
+
+        availabilities = list(
+            doctor.availabilities.filter(
+                day_of_week__iexact=day_of_week,
+                is_available=True
+            ).order_by('start_time')
+        )
+
+        for availability in availabilities:
+            current_start = datetime.combine(appointment_date, availability.start_time)
+            availability_end = datetime.combine(appointment_date, availability.end_time)
+
+            while current_start + slot_duration <= availability_end:
+                slot_time_str = current_start.strftime('%H:%M')
+                next_end = current_start + slot_duration
+                slot_end_str = next_end.strftime('%H:%M')
+
+                configured_slot = configured_map.get(slot_time_str)
+                base_capacity = max((configured_slot.max_appointments if configured_slot else 1) or 1, 1)
+                slot_available_flag = bool(configured_slot.is_available) if configured_slot else True
+
+                booked_count = booked_counts.get(slot_time_str, 0)
+                remaining_capacity = max(base_capacity - booked_count, 0)
+
+                is_future_slot = not current_time_today or current_start.time() > current_time_today
+                is_available = slot_available_flag and remaining_capacity > 0 and is_future_slot
+
+                status_label = 'available' if is_available else 'booked'
+
+                slot_data.append({
+                    'id': str(configured_slot.id) if configured_slot else f"availability-{availability.id}-{slot_time_str.replace(':', '')}",
+                    'time': slot_time_str,
+                    'start_time': slot_time_str,
+                    'end_time': slot_end_str,
+                    'status': status_label,
+                    'is_available': is_available,
+                    'is_fully_booked': remaining_capacity <= 0 or not is_future_slot,
+                    'current_appointments': booked_count,
+                    'max_appointments': base_capacity,
+                    'remaining_capacity': remaining_capacity,
+                })
+
+                processed_keys.add(slot_time_str)
+                current_start = next_end
+
+        working_windows = _collect_working_day_windows(doctor, day_of_week)
+
+        for start_time_value, end_time_value in working_windows:
+            current_start = datetime.combine(appointment_date, start_time_value)
+            window_end = datetime.combine(appointment_date, end_time_value)
+
+            while current_start + slot_duration <= window_end:
+                slot_time_str = current_start.strftime('%H:%M')
+                if slot_time_str in processed_keys:
+                    current_start += slot_duration
+                    continue
+
+                next_end = current_start + slot_duration
+                slot_end_str = next_end.strftime('%H:%M')
+
+                configured_slot = configured_map.get(slot_time_str)
+                base_capacity = max((configured_slot.max_appointments if configured_slot else 1) or 1, 1)
+                slot_available_flag = bool(configured_slot.is_available) if configured_slot else bool(doctor.is_available)
+
+                booked_count = booked_counts.get(slot_time_str, 0)
+                remaining_capacity = max(base_capacity - booked_count, 0)
+
+                is_future_slot = not current_time_today or current_start.time() > current_time_today
+                is_available = slot_available_flag and remaining_capacity > 0 and is_future_slot
+
+                status_label = 'available' if is_available else 'booked'
+
+                slot_data.append({
+                    'id': str(configured_slot.id) if configured_slot else f"working-{day_of_week}-{slot_time_str.replace(':', '')}",
+                    'time': slot_time_str,
+                    'start_time': slot_time_str,
+                    'end_time': slot_end_str,
+                    'status': status_label,
+                    'is_available': is_available,
+                    'is_fully_booked': remaining_capacity <= 0 or not is_future_slot,
+                    'current_appointments': booked_count,
+                    'max_appointments': base_capacity,
+                    'remaining_capacity': remaining_capacity,
+                })
+
+                processed_keys.add(slot_time_str)
+                current_start = next_end
+
+        for slot in configured_slots:
+            key = slot.start_time.strftime('%H:%M')
+            if key in processed_keys:
+                continue
+
+            booked_count = booked_counts.get(key, 0)
+            base_capacity = max(slot.max_appointments or 1, 1)
+            remaining_capacity = max(base_capacity - booked_count, 0)
+            is_future_slot = not current_time_today or slot.start_time > current_time_today
+            slot_available_flag = bool(slot.is_available)
+            is_available = slot_available_flag and remaining_capacity > 0 and is_future_slot
+            status_label = 'available' if is_available else 'booked'
+
+            slot_data.append({
+                'id': str(slot.id),
+                'time': key,
+                'start_time': key,
+                'end_time': slot.end_time.strftime('%H:%M'),
+                'status': status_label,
+                'is_available': is_available,
+                'is_fully_booked': remaining_capacity <= 0 or not is_future_slot,
+                'current_appointments': booked_count,
+                'max_appointments': base_capacity,
+                'remaining_capacity': remaining_capacity,
             })
-            
-            current_time += slot_duration
-        
+
+        slot_data.sort(key=lambda item: item['time'])
+
         return Response({
             'doctor': {
                 'id': doctor.id,
@@ -191,9 +440,10 @@ def get_available_slots(request):
                 'department': doctor.department
             },
             'date': date_str,
-            'available_slots': slots
+            'day_of_week': day_of_week,
+            'available_slots': slot_data
         })
-        
+
     except Doctor.DoesNotExist:
         return Response(
             {'error': 'Doctor not found'}, 
